@@ -5,7 +5,31 @@ import matplotlib.pyplot as plt
 import numpy as np
 plt.close("all")
 
-print('Hello World!')
+#------------------------------------------------------------------------------------------------------
+#Sources for Relevant Papers And Their Authors
+#All Data Cited That Was Used In This Homework
+
+#For Hungarian Chickenpox Cases Data Set
+#Citation Request:
+
+#@misc{rozemberczki2021chickenpox,
+#title={Chickenpox Cases in Hungary: a Benchmark Dataset for Spatiotemporal Signal Processing with Graph Neural Networks},
+#author={Benedek Rozemberczki and Paul Scherer and Oliver Kiss and Rik Sarkar and Tamas Ferenci},
+#year={2021},
+#eprint={2102.08100},
+#archivePrefix={arXiv},
+#primaryClass={cs.SI}
+#}
+
+#For Air Quality Data Set
+#Citation Request:
+
+#S. De Vito, E. Massera, M. Piga, L. Martinotto, G. Di Francia, On field calibration of an electronic nose for benzene estimation in an urban pollution monitoring scenario, Sensors and Actuators B: Chemical, Volume 129, Issue 2, 22 February 2008, Pages 750-757, ISSN 0925-4005, [Web Link].
+#([Web Link])
+
+#------------------------------------------------------------------------------------------------------
+
+print('Hello World!') 
 df = pd.read_csv("AirQualityUCI_CSV.csv")
 #qf = df.sort_values(by=["CO(GT)", "Time"])
 
@@ -29,7 +53,7 @@ def gaussian_kernal(h,user_x):
 	total_sum = 0
 	n = 1
 	for xn in zip(qf["CO(GT)"]):
-		total_sum += (np.exp(np.linalg.norm(user_x - xn[0])/(-2*h*h)))/((2*np.pi*h*h)**.5)
+		total_sum += (np.exp((np.linalg.norm(user_x - xn[0])**2)/(-2*h*h))) / ((2*np.pi*h*h)**.5)
 		n += 1
 	n -= 1
 	return (total_sum/n)
@@ -64,6 +88,20 @@ def basic_kernal(h,user_x):
 	#estimated_value = (total_sum/n)
 	#print(estimated_value)
 
+#------------------------------------------------------------------------------------------------------
+# Air Quality Data: CO(GT),PT08.S1(CO),NMHC(GT),C6H6(GT),PT08.S2(NMHC),NOx(GT),PT08.S3(NOx),NO2(GT),PT08.S4(NO2),PT08.S5(O3),T,RH,AH
+#------------------------------------------------------------------------------------------------------
+df = pd.read_csv("AirQualityUCI_CSV.csv")
+
+
+#------------------------------------------------------------------------------------------------------
+# Chickenpox Data: CO(GT),PT08.S1(CO),NMHC(GT),C6H6(GT),PT08.S2(NMHC),NOx(GT),PT08.S3(NOx),NO2(GT),PT08.S4(NO2),PT08.S5(O3),T,RH,AH
+#------------------------------------------------------------------------------------------------------
+df = pd.read_csv("hungary_chickenpox.csv")
+
+
+#Example of Graph Formation For Data Sets
+#And Calculation of Estimated Values
 def set_kernal(user_x):
 	return gaussian_kernal(.07, user_x)
 def set_kernal2(user_x):
