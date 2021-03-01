@@ -29,14 +29,8 @@ plt.close("all")
 
 #------------------------------------------------------------------------------------------------------
 
-print('Hello World!') 
-df = pd.read_csv("AirQualityUCI_CSV.csv")
-#qf = df.sort_values(by=["CO(GT)", "Time"])
-
-qf = df#.sort_values(by=["CO(GT)", "Time"])
-
-#for co, time in zip(qf["CO(GT)"], qf["Time"]):
-#	print(co, time)
+# Testing Comment for Compilation
+print('Starting') 
 
 # Function p(x) has /x/ as the bound variable from user input
 # h is user input for volume of hypercube h^D in D dimensions
@@ -48,16 +42,31 @@ qf = df#.sort_values(by=["CO(GT)", "Time"])
 #h = .07
 #user_x = 3
 
+# Gaussian method subsituted in for k(u)
+# generates the gaussian method specifically for kernal density mixture modeling
 
-def gaussian_kernal(h,user_x):
+def generic_gaussian_kernal(h,user_x,data_set,data_label):
 	total_sum = 0
 	n = 1
-	for xn in zip(qf["CO(GT)"]):
+	for xn in zip(data_set[data_label]):
 		total_sum += (np.exp((np.linalg.norm(user_x - xn[0])**2)/(-2*h*h))) / ((2*np.pi*h*h)**.5)
 		n += 1
 	n -= 1
 	return (total_sum/n)
 
+# Defined in such a way that for a k_function that takes the difference from the user's x_value against a list's x_vaulues
+# That it will process as long as the k_function is of a basic version, such as k2 down further below
+def generic_basic_kernal(h,user_x,k_funct,data_set,data_label):
+	total_sum = 0
+	D = 1
+	n = 1
+	for xn in zip(data_set[data_label]):
+		total_sum += (1/(h**D)) * k_funct((user_x - xn[0])/h)
+		n += 1
+	n -= 1
+	return (total_sum/n)
+
+# Two basic kernal functions for weighting
 def k2(u):
 	if (u <= .3):
 		return .6
@@ -75,37 +84,131 @@ def k(u):
 	else:
 		# print("I'm 0")
 		return 0
+#------------------------------------------------------------------------------------------------------
 
-def basic_kernal(h,user_x):
-	total_sum = 0
-	D = 1
-	n = 1
-	for xn in zip(qf["CO(GT)"]):
-		total_sum += (1/(h**D)) * k2((user_x - xn[0])/h)
-		n += 1
-	n -= 1
-	return (total_sum/n)
+#Outdated Imported Learning Attempts
+#Old Non-Generic Kernal Methods for Reference
+
+#df = pd.read_csv("AirQualityUCI_CSV.csv")
+#qf = df.sort_values(by=["CO(GT)", "Time"])
+
+#qf = df#.sort_values(by=["CO(GT)", "Time"])
+
+#for co, time in zip(qf["CO(GT)"], qf["Time"]):
+#	print(co, time)
+
+#def gaussian_kernal(h,user_x):
+#	total_sum = 0
+#	n = 1
+#	for xn in zip(qf["CO(GT)"]):
+#		total_sum += (np.exp((np.linalg.norm(user_x - xn[0])**2)/(-2*h*h))) / ((2*np.pi*h*h)**.5)
+#		n += 1
+#	n -= 1
+#	return (total_sum/n)
+
+# def basic_kernal(h,user_x):
+#	total_sum = 0
+#	D = 1
+#	n = 1
+#	for xn in zip(qf["CO(GT)"]):
+#		total_sum += (1/(h**D)) * k2((user_x - xn[0])/h)
+#		n += 1
+#	n -= 1
+#	return (total_sum/n)
 	#estimated_value = (total_sum/n)
 	#print(estimated_value)
 
 #------------------------------------------------------------------------------------------------------
 # Air Quality Data: CO(GT),PT08.S1(CO),NMHC(GT),C6H6(GT),PT08.S2(NMHC),NOx(GT),PT08.S3(NOx),NO2(GT),PT08.S4(NO2),PT08.S5(O3),T,RH,AH
 #------------------------------------------------------------------------------------------------------
-df = pd.read_csv("AirQualityUCI_CSV.csv")
+airQuality = pd.read_csv("AirQualityUCI_CSV.csv")
 
+def cogt(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"CO(GT)")
+def pt08s1co(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"PT08.S1(CO)")
+def nmhcgt(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"NMHC(GT)")
+def c6h6gt(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"C6H6(GT)")
+def pt08s2nmhc(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"PT08.S2(NMHC)")
+def noxgt(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"NOx(GT)")
+def pt08s3nox(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"PT08.S3(NOx)")
+def no2gt(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"NO2(GT)")
+def pt08s4no2(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"PT08.S4(NO2)")
+def pt08s503(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"PT08.S5(O3)")
+def t(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"T")
+def rh(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"RH")
+def ah(user_x):
+	return generic_gaussian_kernal(.07, user_x,airQuality,"AH")
+
+#Test
+print(pt08s2nmhc(3))
 
 #------------------------------------------------------------------------------------------------------
-# Chickenpox Data: CO(GT),PT08.S1(CO),NMHC(GT),C6H6(GT),PT08.S2(NMHC),NOx(GT),PT08.S3(NOx),NO2(GT),PT08.S4(NO2),PT08.S5(O3),T,RH,AH
+# Chickenpox Data: BUDAPEST,BARANYA,BACS,BEKES,BORSOD,CSONGRAD,FEJER,GYOR,HAJDU,HEVES,JASZ,KOMAROM,NOGRAD,PEST,SOMOGY,SZABOLCS,TOLNA,VAS,VESZPREM,ZALA
 #------------------------------------------------------------------------------------------------------
-df = pd.read_csv("hungary_chickenpox.csv")
+chickenPox = pd.read_csv("hungary_chickenpox.csv")
 
+def budapest(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"BUDAPEST")
+def baranya(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"BARANYA")
+def bacs(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"BACS")
+def bekes(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"BEKES")
+def borsod(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"BORSOD")
+def csongrad(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"CSONGRAD")
+def fejer(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"FEJER")
+def gyor(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"GYOR")
+def hajdu(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"HAJDU")
+def heves(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"HEVES")
+def jasz(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"JASZ")
+def komarom(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"KOMAROM")
+def nograd(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"NOGRAD")
+def pest(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"PEST")
+def somogy(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"SOMOGY")
+def szabolcs(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"SZABOLCS")
+def tolna(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"TOLNA")
+def vas(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"VAS")
+def veszprem(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"VESZPREM")
+def zala(user_x):
+	return generic_gaussian_kernal(.07, user_x,chickenPox,"ZALA")
 
+#Test
+print(str(nograd(12)))
+
+#------------------------------------------------------------------------------------------------------
 #Example of Graph Formation For Data Sets
 #And Calculation of Estimated Values
 def set_kernal(user_x):
-	return gaussian_kernal(.07, user_x)
+	return generic_gaussian_kernal(.07, user_x,airQuality,"CO(GT)")
 def set_kernal2(user_x):
-	return basic_kernal(.07, user_x)
+	return generic_basic_kernal(.07, user_x,k2,airQuality,"CO(GT)")
 
 vectorized_kernal = np.vectorize(set_kernal)
 vectorized_kernal2 = np.vectorize(set_kernal2)
