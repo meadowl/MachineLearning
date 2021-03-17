@@ -25,7 +25,7 @@ plt.close("all")
 # Testing Comment for Compilation
 print('Starting') 
 
-ShakespeareFile = open('alllines.txt')
+ShakespeareFile = open('one-hundredth.txt')
 ShakespeareString = ShakespeareFile.read()
 ShakespeareFile.close()
 
@@ -40,3 +40,40 @@ ShakespeareList = Counter(ShakespeareString.split())
 #	print(a+" Name")
 
 print(len(ShakespeareList))
+
+#Create Matrix
+internalgraph = {}
+
+
+ShortList = ShakespeareList.most_common(500)
+#print(ShortList)
+FullList = ShakespeareString.split()
+
+#for a,b in zip(ShortList, (del ShortList[0]):
+#	internalgraph[(a,b)] = 0
+for a in FullList:
+	for b in FullList:
+		internalgraph[(a,b)] = 0
+#Intialize every point to not Null
+
+#InternalList1 = FullList
+#InternalList2 = FullList
+# For some reason the above references the same list.
+
+InternalList1 = ShakespeareString.split()
+InternalList2 = ShakespeareString.split()
+# But this split method makes them independent.
+
+#print(len(InternalList1))
+#print(len(InternalList2))
+InternalList1.pop(-1) #Remove the back
+InternalList2.pop(0) #Remove the front
+#print(len(InternalList1))
+#print(len(InternalList2))
+
+for a,b in zip(InternalList1, InternalList2):
+	internalgraph[(a,b)] += 1
+
+for a,b in zip(InternalList1, InternalList2):
+	if (internalgraph[(a,b)] > 0):
+		print(a + " " + b)

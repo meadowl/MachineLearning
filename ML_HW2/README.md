@@ -17,21 +17,20 @@ files to the git repository in GitHub
 
 ## Citation
 
-Sources for Relevant Paper And Their Authors
-All Data Cited That Was Used In This Homework
+Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In This Homework
 
 [ShakespearePlays](https://www.kaggle.com/kingburrito666/shakespeare-plays/metadata)
-License: Unknown
-Visibility: Public
-Dataset owner: LiamLarsen
-Last updated: 2017-04-27, Version 4
++ License: Unknown
++ Visibility: Public
++ Dataset owner: LiamLarsen
++ Last updated: 2017-04-27, Version 4
 
 ## Requirements
 
-+ pandas
-+ numpy
-+ matplotlib
-+ collections
++ Pandas
++ Numpy
++ Matplotlib
++ Collections
 
 ## Usage
 
@@ -55,3 +54,6 @@ After running the total number of words across Shakespeare's plays was possible.
      Starting
      25730
 ```
+
+11114 lines is 10% of the original documents lines
+1111 lines is 1% of the original doccumetns lines
