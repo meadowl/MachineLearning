@@ -9,8 +9,8 @@ or from https://github.com/niderhoff/nlp-datasets
 4. Formulate ideas on how machine learning can be used to learn 
 word correlations and distributions within the dataset
 5. Build a Hidden Markov Model to be able to programmatically 
-1. Generate new text from the text corpus
-2. Perform text prediction given a sequence of words
++ 1. Generate new text from the text corpus
++ 2. Perform text prediction given a sequence of words
 6. Document your process and results
 7. Commit your source code, documentation and other supporting 
 files to the git repository in GitHub
@@ -55,5 +55,29 @@ After running the total number of words across Shakespeare's plays was possible.
      25730
 ```
 
-11114 lines is 10% of the original documents lines
-1111 lines is 1% of the original doccumetns lines
+11114 lines is 10% of the original documents lines\
+1111 lines is 1% of the original doccumetns lines\
+
+Due to the complexity of the text and runtime, only 1% of Shakespeare's lines were utlized.\
+Anything approaching 10% or greater resulted in runtimes that were not calculable and used RAM in excess of 3 Gigabytes.\
+
+Now massaging the data into the rest of the program can be done with reading in one-hundredth.txt\
+
+## Figuring Out Matrix Usage
+
+Which allows one to build a reasonable transition matrix for the words probabilites as they relate to one another.\
+
+For example:\
+-- The times "castle" follows "the" is 2 times, so the edge is represened as \["the"\]\["castle"\] = 2\
+   Where \["castle"\]\["the"\] is still set to 0, since "castle" never preceeds "the".\
+
+Then after filling the matrix with all representitive edges and their associated occurances.\
+The matrix then is itterated over again to calculate the weights.\
+
+For example:\
+-- The times "cow" follows "the" is 1 times, so the edge is represened as \["the"\]\["cow"\] = 1\
+   But now, assuming these to be the only edges - need to calculated their weights.\
+   So with a total occurance of 3 times for that row, 3 is then divided across the edges resulting in\
+    \["the"\]\["castle"\] = 2/3 And \["the"\]\["cow"\] = 1/3\
+
+Now a matrix containing all weighted edges for transitions has been produced.\

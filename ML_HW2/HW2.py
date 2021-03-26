@@ -45,7 +45,7 @@ print(len(ShakespeareList))
 internalgraph = {}
 
 
-ShortList = ShakespeareList.most_common(500)
+#ShortList = ShakespeareList.most_common(500)
 #print(ShortList)
 FullList = ShakespeareString.split()
 
@@ -80,18 +80,21 @@ for a,b in zip(InternalList1, InternalList2):
 
 externalgraph = {}
 
-ShortList2 = dict(ShortList)
-CommonList = list(ShortList2.keys())
+#ShortList2 = dict(ShortList)
+#CommonList = list(ShortList2.keys())
+CommonList = list(dict(ShakespeareList).keys())
 #CommonList = list(ShortList2.values())
 
 for a in CommonList:
 	for b in CommonList:
-		externalgraph[(a,b)] = 0
+		externalgraph[(a,b)] = [0,0]
+
+#Where the first is the count, the second is the initialized probability
 
 
 for a in CommonList:
 	for b in CommonList:
-		externalgraph[(a,b)] = internalgraph[(a,b)]
+		externalgraph[(a,b)][0] = internalgraph[(a,b)]
 
 #Have initiated a 500 x 500 matrix 
 #representing edges of the most common 500 words
@@ -100,19 +103,26 @@ full_length = {}
 for a in CommonList:
 	local_length = 0
 	for b in CommonList:
-		local_length += externalgraph[(a,b)]
+		local_length += externalgraph[(a,b)][0]
 	if (local_length == 0):
+		print("Word without connections found\n")
 		local_length = 1
 	full_length[a] = local_length
 
 for a in CommonList:
 	for b in CommonList:
-		externalgraph[(a,b)] = externalgraph[(a,b)] / full_length[a]
+		externalgraph[(a,b)][1] = externalgraph[(a,b)][0] / full_length[a]
 
 #Now ever row, has the initial chances that each word is connected to the other.
 #The probability of the edge being taken as it were.
 
 for a in CommonList:
 	for b in CommonList:
-		if (externalgraph[(a,b)] > .1):
+		if (externalgraph[(a,b)][1] > .1):
 			print(a + " " + b)
+
+#for a in CommonList:
+#	local_length = 0
+#	for b in CommonList:
+#		local_length += externalgraph[(a,b)]
+#	print(local_length)
