@@ -116,13 +116,81 @@ for a in CommonList:
 #Now ever row, has the initial chances that each word is connected to the other.
 #The probability of the edge being taken as it were.
 
-for a in CommonList:
-	for b in CommonList:
-		if (externalgraph[(a,b)][1] > .1):
-			print(a + " " + b)
+#for a in CommonList:
+#	for b in CommonList:
+#		if (externalgraph[(a,b)][1] > .1):
+#			print(a + " " + b)
+
+print("Starting Seeded Text Generation")
 
 #for a in CommonList:
 #	local_length = 0
 #	for b in CommonList:
 #		local_length += externalgraph[(a,b)]
 #	print(local_length)
+
+# Generate new text from the text corpus.
+# Seed word chosen? "sir"
+
+def pick_edge(commonMatrix, commonList, previousWord):
+	nextWord = previousWord
+	for a in commonList:
+		if (commonMatrix[(previousWord, a)][1] >= commonMatrix[(previousWord, nextWord)][1]):
+			nextWord = a
+	return nextWord
+
+def iterate_text(commonMatrix, commonList, seedWord):
+	counter = 0
+	internalString = seedWord
+	internalWord = seedWord
+	while (counter != 10):
+		internalWord = pick_edge(commonMatrix, commonList, internalWord)
+		internalString += (" " + internalWord)
+		counter += 1
+	return internalString
+
+#print(iterate_text(externalgraph, CommonList, "sir"))
+
+# Perform text prediction given a sequence of words
+
+def rebalance_matrix_weights(commonMatrix, commonList):
+	full_length = {}
+	for a in commonList:
+		local_length = 0
+		for b in commonList:
+			local_length += commonMatrix[(a,b)][0]
+		if (local_length == 0):
+			print("Word without connections found\n")
+			local_length = 1
+		full_length[a] = local_length
+	for a in commonList:
+		for b in commonList:
+			commonMatrix[(a,b)][1] = commonMatrix[(a,b)][0] / full_length[a]
+	return commonMatrix
+
+def modify_matrix(commonMatrix, commonList, userWords):
+	for char in '"-.,!:?\n':
+		userWords = userWords.replace(char,' ')
+	userWords = userWords.lower()
+	userWordsList1 = userWords.split()
+	userWordsList2 = userWords.split()
+	userWordsList1.pop(-1)
+	userWordsList2.pop(0)
+	for a,b in zip(userWordsList1, userWordsList2):
+		if a in commonList:
+			if b in commonList:
+				commonMatrix[(a,b)][0] += 1
+	rebalancedMatrix = rebalance_matrix_weights(commonMatrix, commonList)
+	return rebalancedMatrix
+
+def iterate_text_user(commonMatrix, commonList, userWords):
+	modifiedMatrix = modify_matrix(commonMatrix, commonList, userWords)
+	for char in '"-.,!:?\n':
+		userWords = userWords.replace(char,' ')
+	userWords = userWords.lower()
+	userWordsList = userWords.split()
+	seedWord = userWordsList[-1]
+	generatedWords = iterate_text(modifiedMatrix, commonList, seedWord)
+	return(userWords + " " + generatedWords)
+
+print(iterate_text_user(externalgraph, CommonList, "the king died from poison"))
