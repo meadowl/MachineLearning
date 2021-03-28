@@ -66,7 +66,7 @@ Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In Th
      3
 ``` 
 
-[Image From Command Prompt](PythonExe.jfif)
+![Image From Command Prompt](PythonExe.jfif?raw=true "Title")
 
 ## Figuring Out Space-Time Complexity
 
@@ -93,10 +93,10 @@ Now massaging the data into the rest of the program can be done with reading in 
 
 ```Bash
      sed -i '/ACT/d' spec.txt
-	sed -i '/SCENE/d' spec.txt
+     sed -i '/SCENE/d' spec.txt
      sed -i '/Enter/d' spec.txt
-	sed -i '/BISHOP/d' spec.txt
-	sed '1112,$d' spec.txt > newspec.txt
+     sed -i '/BISHOP/d' spec.txt
+     sed '1112,$d' spec.txt > newspec.txt
 ```
 
 ## Figuring Out Matrix Usage
