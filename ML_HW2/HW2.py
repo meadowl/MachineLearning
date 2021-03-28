@@ -41,7 +41,7 @@ def make_externalGraph_commonList(file_name):
 	#for a in ShakespeareList:
 	#	print(a+" Name")
 
-	print(len(ShakespeareList))
+	print("Unique Words: " + str(len(ShakespeareList)))
 
 	#Create Matrix
 	internalgraph = {}
@@ -146,7 +146,7 @@ def iterate_text(commonMatrix, commonList, seedWord):
 	counter = 0
 	internalString = seedWord
 	internalWord = seedWord
-	while (counter != 10):
+	while (counter != 20):
 		internalWord = pick_edge(commonMatrix, commonList, internalWord)
 		internalString += (" " + internalWord)
 		counter += 1
@@ -186,6 +186,16 @@ def modify_matrix(commonMatrix, commonList, userWords):
 	rebalancedMatrix = rebalance_matrix_weights(commonMatrix, commonList)
 	return rebalancedMatrix
 
+def sub_iterate_text(commonMatrix, commonList, seedWord):
+	counter = 0
+	internalString = ""
+	internalWord = seedWord
+	while (counter != 20):
+		internalWord = pick_edge(commonMatrix, commonList, internalWord)
+		internalString += (" " + internalWord)
+		counter += 1
+	return internalString
+
 def iterate_text_user(commonMatrix, commonList, userWords):
 	modifiedMatrix = modify_matrix(commonMatrix, commonList, userWords)
 	for char in '"-.,!:?\n':
@@ -193,15 +203,16 @@ def iterate_text_user(commonMatrix, commonList, userWords):
 	userWords = userWords.lower()
 	userWordsList = userWords.split()
 	seedWord = userWordsList[-1]
-	generatedWords = iterate_text(modifiedMatrix, commonList, seedWord)
-	return(userWords + " " + generatedWords)
+	generatedWords = sub_iterate_text(modifiedMatrix, commonList, seedWord)
+	return(userWords + generatedWords)
 
 #print(iterate_text_user(externalgraph, CommonList, "the king died from poison"))
 
 def main():
 	gate = 0
 	print("Loading Edges...")
-	myData = make_externalGraph_commonList('one-hundredth.txt')
+	#myData = make_externalGraph_commonList('one-hundredth.txt')
+	myData = make_externalGraph_commonList('newspec.txt')
 	externalgraph = myData[0]
 	CommonList = myData[1]
 	while (gate != 3):
@@ -210,11 +221,12 @@ def main():
 		print("Option 2: Generate From User Input")
 		print("Type 1 or 2 To Select Option, 3 to Exit")
 		value = input("Input Integer Now:\n")
-		gate = int(value)
+		if (value == "1") or (value == "2") or (value == "3"):
+			gate = int(value)
 		if (gate == 1):
-			print(iterate_text(externalgraph, CommonList, "sir"))
+			print(iterate_text(externalgraph, CommonList, "the"))
 		if (gate == 2):
-			userString = input("Please Provide A User String Now:\n")
+			userString = input("Please Provide A User String Now:\n")#thou never see
 			print(iterate_text_user(externalgraph, CommonList, userString))
 		print("\n")
 main()
