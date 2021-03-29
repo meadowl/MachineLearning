@@ -128,7 +128,7 @@ For instance for the strings "the cow" and "the castle":
      externalgraph[("the","castle")] = [2,2/3]
      externalgraph[("the","cow")] = [1,1/3]
      externalgraph["the","cow"][0] = 1
-     externalgraph["the","cow"][0] = 1/3
+     externalgraph["the","cow"][1] = 1/3
 ``` 
 
 This provides easy access to both count, as well as the calculated weight of the edge all at once.
