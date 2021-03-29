@@ -83,8 +83,7 @@ After running the total number of words across Shakespeare's plays was possible.
      25730
 ```
 
-For refrence after reading through the file, it was found that:
-
+For refrence after reading through the file, it was found that:\
 11114 lines is 10% of the original documents lines\
 1111 lines is 1% of the original documents lines
 
@@ -123,7 +122,7 @@ Now a matrix containing all weighted edges for transitions has been produced.\
 And this matrix can now be used to model the probabilities.
 
 Note that in the case of this implementation, the matrix produced holds both the probability and counts per edge.\
-For instance for the string "the cow":
+For instance for the strings "the cow" and "the castle":
 
 ```Python
      externalgraph[("the","castle")] = [2,2/3]
