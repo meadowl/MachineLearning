@@ -236,12 +236,12 @@ def main_old():
 # List of weights [.3,.3,.4]
 # List of inputs [1,2,3]
 
-weights  = [[.3,.1,.9],[-.3,-.5,-.9]]
+weights  = [[.3,.1,.4],[-.3,-.5,-.3],[-.3,.6,-.3],[.4,.3,.3]]
 #weights = [[.3,.3,.4],[-.5,-.9,-.4]]
-inputs = [[1,1,1],[0,0,0]]
+inputs = [[3,3,3],[4,4,4],[-3,-3,-3],[-4,-4,-4]]
 #biases = [0,.5]
-biases = [0,1]
-expectedOutput = [1,0]
+biases = [0,0,0,0]
+expectedOutput = [1,1,0,0]
 
 def my_neuron(weightList, inputList, bias, my_function):
 	dotproduct = np.dot(weightList,inputList)
@@ -273,7 +273,7 @@ def neuron_layer(EveryNeurons_weightList, Every_inputList, EveryNeurons_bias, In
 print(neuron_layer(weights,inputs,biases,sigmoid_neuron))
 
 def simple_error(expectedValue, actualValue):
-	diff = (expectedValue - actualValue)
+	diff = (expectedValue - actualValue) * (expectedValue - actualValue)
 	return diff
 
 
@@ -299,7 +299,7 @@ def layer1_bias_chain(expectedValue, actualValue):
 def layer1_weight_adjustment(weightList, bias, expectedValue, actualValue):
 	weight_adjustments = layer1_derivative_chain(weightList, expectedValue, actualValue)
 	bias_adjustment = layer1_bias_chain(expectedValue, actualValue)
-	new_weightList = np.add(weightList, weight_adjustments) #np.add for opposite affect
+	new_weightList = np.add(weightList, weight_adjustments) #np.add for opposite affect subtract
 	new_bias = bias + bias_adjustment
 	return [new_weightList, new_bias]
 
@@ -327,7 +327,7 @@ print(multiple_training_attempts(weights,biases, inputs, sigmoid_neuron, expecte
 
 
 def bulk_training(weightLists, biases, inputLists, sigmoid_neuron, expectedValues):
-	for x in range(100):
+	for x in range(1):
 		listofnewweightsbiases = multiple_training_attempts(weightLists, biases, inputLists, sigmoid_neuron, expectedValues)
 		weightLists = listofnewweightsbiases[0]
 		biases = listofnewweightsbiases[1]
