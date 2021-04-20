@@ -15,13 +15,13 @@ Neural network architectures
 Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In This Homework
 
 [AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
-+ License: UCI Machine Learning Repository(https://archive.ics.uci.edu/ml/citation_policy.html)
++ [License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
 + Visibility: Public
 + Dataset owner: (confidential)
 + Last updated: N/A
 
-[AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
-+ License: UCI Machine Learning Repository(https://archive.ics.uci.edu/ml/citation_policy.html)
+[AdultData](https://archive.ics.uci.edu/ml/datasets/adult)
++ [License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
 + Visibility: Public
 + Dataset owner: Ronny Kohavi and Barry Becker
 + Last updated: 1996-05-01
