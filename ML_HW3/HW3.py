@@ -25,189 +25,6 @@ from collections import Counter
 # Testing Comment for Compilation
 print('Starting') 
 
-def make_externalGraph_commonList(file_name):
-
-	ShakespeareFile = open(file_name)
-	ShakespeareString = ShakespeareFile.read()
-	ShakespeareFile.close()
-
-	for char in '"-.,!:?\n':
-	    ShakespeareString=ShakespeareString.replace(char,' ')
-	ShakespeareString = ShakespeareString.lower()
-	ShakespeareList = Counter(ShakespeareString.split())
-
-	#ShakespeareData = pd.DataFrame.from_records(ShakespeareList, index=[0])
-
-	#for a in ShakespeareList:
-	#	print(a+" Name")
-
-	print("Unique Words: " + str(len(ShakespeareList)))
-
-	#Create Matrix
-	internalgraph = {}
-
-
-	#ShortList = ShakespeareList.most_common(500)
-	#print(ShortList)
-	FullList = ShakespeareString.split()
-
-	#for a,b in zip(ShortList, (del ShortList[0]):
-	#	internalgraph[(a,b)] = 0
-	for a in FullList:
-		for b in FullList:
-			internalgraph[(a,b)] = 0
-	#Intialize every point to not Null
-
-	#InternalList1 = FullList
-	#InternalList2 = FullList
-	# For some reason the above references the same list.
-
-	InternalList1 = ShakespeareString.split()
-	InternalList2 = ShakespeareString.split()
-	# But this split method makes them independent.
-
-	#print(len(InternalList1))
-	#print(len(InternalList2))
-	InternalList1.pop(-1) #Remove the back
-	InternalList2.pop(0) #Remove the front
-	#print(len(InternalList1))
-	#print(len(InternalList2))
-
-	for a,b in zip(InternalList1, InternalList2):
-		internalgraph[(a,b)] += 1
-
-	#for a,b in zip(InternalList1, InternalList2):
-	#	if (internalgraph[(a,b)] > 0):
-	#		print(a + " " + b)
-
-	externalgraph = {}
-
-	#ShortList2 = dict(ShortList)
-	#CommonList = list(ShortList2.keys())
-	CommonList = list(dict(ShakespeareList).keys())
-	#CommonList = list(ShortList2.values())
-
-	for a in CommonList:
-		for b in CommonList:
-			externalgraph[(a,b)] = [0,0]
-
-	#Where the first is the count, the second is the initialized probability
-
-
-	for a in CommonList:
-		for b in CommonList:
-			externalgraph[(a,b)][0] = internalgraph[(a,b)]
-
-	#Have initiated a 500 x 500 matrix 
-	#representing edges of the most common 500 words
-
-	full_length = {}
-	for a in CommonList:
-		local_length = 0
-		for b in CommonList:
-			local_length += externalgraph[(a,b)][0]
-		if (local_length == 0):
-			print("Word without connections found\n")
-			local_length = 1
-		full_length[a] = local_length
-
-	for a in CommonList:
-		for b in CommonList:
-			externalgraph[(a,b)][1] = externalgraph[(a,b)][0] / full_length[a]
-
-	#Now ever row, has the initial chances that each word is connected to the other.
-	#The probability of the edge being taken as it were.
-
-	#for a in CommonList:
-	#	for b in CommonList:
-	#		if (externalgraph[(a,b)][1] > .1):
-	#			print(a + " " + b)
-
-	#print("Starting Seeded Text Generation")
-	return([externalgraph,CommonList])
-
-#for a in CommonList:
-#	local_length = 0
-#	for b in CommonList:
-#		local_length += externalgraph[(a,b)]
-#	print(local_length)
-
-# Generate new text from the text corpus.
-# Seed word chosen? "sir"
-
-def pick_edge(commonMatrix, commonList, previousWord):
-	nextWord = previousWord
-	for a in commonList:
-		if (commonMatrix[(previousWord, a)][1] >= commonMatrix[(previousWord, nextWord)][1]):
-			nextWord = a
-	return nextWord
-
-def iterate_text(commonMatrix, commonList, seedWord):
-	counter = 0
-	internalString = seedWord
-	internalWord = seedWord
-	while (counter != 20):
-		internalWord = pick_edge(commonMatrix, commonList, internalWord)
-		internalString += (" " + internalWord)
-		counter += 1
-	return internalString
-
-#print(iterate_text(externalgraph, CommonList, "sir"))
-
-# Perform text prediction given a sequence of words
-
-def rebalance_matrix_weights(commonMatrix, commonList):
-	full_length = {}
-	for a in commonList:
-		local_length = 0
-		for b in commonList:
-			local_length += commonMatrix[(a,b)][0]
-		if (local_length == 0):
-			print("Word without connections found\n")
-			local_length = 1
-		full_length[a] = local_length
-	for a in commonList:
-		for b in commonList:
-			commonMatrix[(a,b)][1] = commonMatrix[(a,b)][0] / full_length[a]
-	return commonMatrix
-
-def modify_matrix(commonMatrix, commonList, userWords):
-	for char in '"-.,!:?\n':
-		userWords = userWords.replace(char,' ')
-	userWords = userWords.lower()
-	userWordsList1 = userWords.split()
-	userWordsList2 = userWords.split()
-	userWordsList1.pop(-1)
-	userWordsList2.pop(0)
-	for a,b in zip(userWordsList1, userWordsList2):
-		if a in commonList:
-			if b in commonList:
-				commonMatrix[(a,b)][0] += 1
-	rebalancedMatrix = rebalance_matrix_weights(commonMatrix, commonList)
-	return rebalancedMatrix
-
-def sub_iterate_text(commonMatrix, commonList, seedWord):
-	counter = 0
-	internalString = ""
-	internalWord = seedWord
-	while (counter != 20):
-		internalWord = pick_edge(commonMatrix, commonList, internalWord)
-		internalString += (" " + internalWord)
-		counter += 1
-	return internalString
-
-def iterate_text_user(commonMatrix, commonList, userWords):
-	modifiedMatrix = modify_matrix(commonMatrix, commonList, userWords)
-	for char in '"-.,!:?\n':
-		userWords = userWords.replace(char,' ')
-	userWords = userWords.lower()
-	userWordsList = userWords.split()
-	seedWord = userWordsList[-1]
-	generatedWords = sub_iterate_text(modifiedMatrix, commonList, seedWord)
-	return(userWords + generatedWords)
-
-#print(iterate_text_user(externalgraph, CommonList, "the king died from poison"))
-
 def main_old():
 	gate = 0
 	print("Loading Edges...")
@@ -254,19 +71,19 @@ def adj(x):
 def adj2(x):
 	return x
 
-def my_sigmoid_old(value):
+def my_sigmoid(value):
 	value2 = value * -1
 	sigmoid = 1 / (1 + np.exp(value2))
 	return sigmoid
 
-def my_sigmoid(value):
+#def my_sigmoid(value):
 	#old = 2 * value
 	#return ((2 * my_sigmoid_old(old)) - 1)
-	return np.tanh(value)
+	#return np.tanh(value)
 
 def my_derivative_sigmoid(value):
 	sigmoid = my_sigmoid(value) * (1 - my_sigmoid(value))
-	return (1-(np.tanh(value) * np.tanh(value) ))#adj2(sigmoid)
+	return sigmoid #(1-(np.tanh(value) * np.tanh(value) ))#adj2(sigmoid)
 
 def sigmoid_neuron(weightList, inputList, bias):
 	return my_neuron(weightList, inputList, bias, my_sigmoid)
@@ -341,7 +158,7 @@ def multiple_training_attempts(weightLists, biases, inputLists, sigmoid_neuron, 
 
 
 def bulk_training(weightLists, biases, inputLists, sigmoid_neuron, expectedValues):
-	for x in range(100):
+	for x in range(1):
 		listofnewweightsbiases = multiple_training_attempts(weightLists, biases, inputLists, sigmoid_neuron, expectedValues)
 		weightLists = listofnewweightsbiases[0]
 		biases = listofnewweightsbiases[1]
@@ -357,7 +174,7 @@ def main():
 	print(listofnewweightsbiases)
 	print(neuron_layer(listofnewweightsbiases[0],inputs,listofnewweightsbiases[1],sigmoid_neuron))
 
-main()
+#main()
 
 
 weightlist1 = [[.1,.1,.1],[1,1,1],[-1,-1,-1]]
@@ -479,7 +296,7 @@ def main3():
 	print(layer_2_outputs)
 	print(layer_3_outputs)
 
-main3()
+#main3()
 
 #Starting
 #Main2
@@ -506,8 +323,73 @@ main3()
 #airQuality = pd.read_csv("australian.csv")
 #print(airQuality)
 
-AustralianCredit = pd.read_table("australian.dat", header=None, sep=" ")
-print(AustralianCredit)
+AustralianCredit = pd.read_table("australian.dat", header=None, sep=" ", usecols=[1,2,6,12,14])
+#print(AustralianCredit.values[0][0] + 1)
 
-AdultIncome = pd.read_table("adult.data", header=None, sep=", ")
-print(AdultIncome)
+def income_converter(x):
+	if  x == " <=50K":
+		return 0
+	return 1
+
+AdultIncome = pd.read_table("adult.data", header=None, sep=",", converters={14:income_converter}, usecols=[0,2,4,12,14])
+#print(AdultIncome.values[1][0] + 1)
+
+#prepared both as column users
+
+# One-Hidden-Layer-Implementation
+# 16 Neurons
+# 4 random weights per Neuron
+
+OneRandomWeights = np.random.rand(1,4)
+OneRandomBiases = np.random.rand(1)
+
+#print(OneRandomWeights)
+#print(OneRandomBiases)
+
+AustralianCredit_Part1 = AustralianCredit.head(300)
+AustralianCredit_Part2 = AustralianCredit.tail(300)
+
+ExpectedOutputAustralian_Array = AustralianCredit_Part1.pop(14)
+#print(AustralianCredit.values)
+
+AustralianCreditValues = AustralianCredit_Part1.values
+ExpectedOutputAustralian = ExpectedOutputAustralian_Array.values
+
+
+
+ExpectedOutputAustralian_Array_Part2 = AustralianCredit_Part2.pop(14)
+TestCreditAustralian_Input = AustralianCredit_Part2.values
+TestCreditAustralian_Output = ExpectedOutputAustralian_Array_Part2.values
+
+def AustralianCredits():
+	print("Starting Weights and Answer Estimation")
+	#print([OneRandomWeights, OneRandomBiases])
+	#print(neuron_layer(OneRandomWeights,AustralianCreditValues,OneRandomBiases,sigmoid_neuron))
+	listofnewweightsbiases = bulk_training(OneRandomWeights,OneRandomBiases, AustralianCreditValues, sigmoid_neuron, ExpectedOutputAustralian)
+	print("Ending Weights and Answer Estimation")
+	#print(listofnewweightsbiases)
+	print(neuron_layer(listofnewweightsbiases[0],TestCreditAustralian_Input,listofnewweightsbiases[1],sigmoid_neuron))
+
+AustralianCredits()
+
+AdultIncome_Part1 = AdultIncome.head(1000)
+AdultIncome_Part2 = AdultIncome.tail(1000)
+
+ExpectedOutputAdultIncome_Array = AdultIncome_Part1.pop(14)
+AdultIncomeValues = AdultIncome_Part1.values
+ExpectedOutputAdultIncome = ExpectedOutputAdultIncome_Array.values
+
+ExpectedOutputAdultIncome_Array_Part2 = AdultIncome_Part2.pop(14)
+TestAdultIncome_Input = AdultIncome_Part2.values
+TestAdultIncome_Output = ExpectedOutputAdultIncome_Array_Part2.values
+
+def AdultIncomes():
+	print("Starting Weights and Answer Estimation")
+	#print([OneRandomWeights, OneRandomBiases])
+	#print(neuron_layer(OneRandomWeights,AustralianCreditValues,OneRandomBiases,sigmoid_neuron))
+	listofnewweightsbiases = bulk_training(OneRandomWeights,OneRandomBiases, AdultIncomeValues, sigmoid_neuron, ExpectedOutputAdultIncome)
+	print("Ending Weights and Answer Estimation")
+	#print(listofnewweightsbiases)
+	print(neuron_layer(listofnewweightsbiases[0],TestAdultIncome_Input,listofnewweightsbiases[1],sigmoid_neuron))
+
+AdultIncomes()
