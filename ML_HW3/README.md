@@ -14,11 +14,18 @@ Neural network architectures
 
 Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In This Homework
 
-[ShakespearePlays](https://www.kaggle.com/kingburrito666/shakespeare-plays/metadata)
-+ License: Unknown
+[AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
++ License: UCI Machine Learning Repository(https://archive.ics.uci.edu/ml/citation_policy.html)
 + Visibility: Public
-+ Dataset owner: LiamLarsen
-+ Last updated: 2017-04-27, Version 4
++ Dataset owner: (confidential)
++ Last updated: N/A
+
+[AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
++ License: UCI Machine Learning Repository(https://archive.ics.uci.edu/ml/citation_policy.html)
++ Visibility: Public
++ Dataset owner: Ronny Kohavi and Barry Becker
++ Last updated: 1996-05-01
+
 
 ## Requirements
 
