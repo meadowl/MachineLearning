@@ -53,11 +53,11 @@ def main_old():
 # List of weights [.3,.3,.4]
 # List of inputs [1,2,3]
 
-weights  = [[-.3,-.1,.4],[.4,.3,-.6]]
+weights  = np.random.rand(2,3)  #[[-.3,-.1,.4],[.4,.3,-.6]]
 #weights = [[.3,.3,.4],[-.5,-.9,-.4]]
 inputs = [[3,3,3],[-3,-3,-3],[4,4,-4]]
 #biases = [0,.5]
-biases = [-4,-6]
+biases = np.random.rand(2) #[-4,-6]
 expectedOutput = [1,0,1]
 
 def my_neuron(weightList, inputList, bias, my_function):
@@ -74,7 +74,10 @@ def adj2(x):
 def my_sigmoid(value):
 	value2 = value * -1
 	sigmoid = 1 / (1 + np.exp(value2))
-	return sigmoid
+	#return sigmoid
+	if value > 0:
+		return value
+	return 0
 
 #def my_sigmoid(value):
 	#old = 2 * value
@@ -83,7 +86,11 @@ def my_sigmoid(value):
 
 def my_derivative_sigmoid(value):
 	sigmoid = my_sigmoid(value) * (1 - my_sigmoid(value))
-	return sigmoid #(1-(np.tanh(value) * np.tanh(value) ))#adj2(sigmoid)
+	#return sigmoid #(1-(np.tanh(value) * np.tanh(value) ))#adj2(sigmoid)
+	if value > 0:
+		return 1
+	return 0
+#ReLu
 
 def sigmoid_neuron(weightList, inputList, bias):
 	return my_neuron(weightList, inputList, bias, my_sigmoid)
@@ -182,7 +189,7 @@ biases1 = [.1,1,-1]
 weightlist2 = [[.1,.1,.1],[1,1,1],[-1,-1,-1]]
 biases2 = [.1,1,-1]
 inputs2 = [[0,0,0],[2,2,2],[8,8,8],[10,10,10]]
-outputs2 = [0,0,1]
+outputs2 = [0,0,1,1]
 weightlist3 = [[.1,.1,.1],[1,1,1],[-1,-1,-1]]
 biases3 = [.1,1,-1]
 
@@ -347,7 +354,8 @@ OneRandomBiases = np.random.rand(1)
 #print(OneRandomBiases)
 
 AustralianCredit_Part1 = AustralianCredit.head(300)
-AustralianCredit_Part2 = AustralianCredit.tail(300)
+AustralianCredit_Part2 = AustralianCredit.tail(10)
+print(AustralianCredit_Part2)
 
 ExpectedOutputAustralian_Array = AustralianCredit_Part1.pop(14)
 #print(AustralianCredit.values)
@@ -370,10 +378,12 @@ def AustralianCredits():
 	#print(listofnewweightsbiases)
 	print(neuron_layer(listofnewweightsbiases[0],TestCreditAustralian_Input,listofnewweightsbiases[1],sigmoid_neuron))
 
-AustralianCredits()
+#AustralianCredits()
 
 AdultIncome_Part1 = AdultIncome.head(1000)
-AdultIncome_Part2 = AdultIncome.tail(1000)
+AdultIncome_Part2 = AdultIncome.tail(10)
+print(AdultIncome_Part2)
+
 
 ExpectedOutputAdultIncome_Array = AdultIncome_Part1.pop(14)
 AdultIncomeValues = AdultIncome_Part1.values
@@ -392,4 +402,8 @@ def AdultIncomes():
 	#print(listofnewweightsbiases)
 	print(neuron_layer(listofnewweightsbiases[0],TestAdultIncome_Input,listofnewweightsbiases[1],sigmoid_neuron))
 
-AdultIncomes()
+#AdultIncomes()
+
+#main()
+
+#main2()
