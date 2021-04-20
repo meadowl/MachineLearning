@@ -1,19 +1,14 @@
-# Hidden Markov Modeling
+# Says One Neuron To Another
 
-Probabilistic states and transitions
+Neural network architectures
 1. Set up a new git repository in your GitHub account
-2. Pick a text corpus dataset such as
-https://www.kaggle.com/kingburrito666/shakespeare-plays
-or from https://github.com/niderhoff/nlp-datasets
+2. Pick two datasets from [Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
 3. Choose a programming language (Python, C/C++, Java)
-4. Formulate ideas on how machine learning can be used to learn 
-word correlations and distributions within the dataset
-5. Build a Hidden Markov Model to be able to programmatically 
-+ 1. Generate new text from the text corpus
-+ 2. Perform text prediction given a sequence of words
+4. Formulate ideas on how neural networks can be used to accomplish the task for the specific dataset
+5. Build a neural network to model the prediction process programmatically
 6. Document your process and results
-7. Commit your source code, documentation and other supporting 
-files to the git repository in GitHub
+7. Commit your source code, documentation and other supporting files to the git repository in GitHub
+
 
 ## Citation
 
