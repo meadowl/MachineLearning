@@ -11,14 +11,19 @@ from collections import Counter
 #Sources for Relevant Papers And Their Authors
 #All Data Cited That Was Used In This Homework
 
-#For ShakespearePlays Data Set
-#Citation:
+#They were found also on Wikipedia without links to the dataset.
 
-#https://www.kaggle.com/kingburrito666/shakespeare-plays/metadata
-#License: Unknown
+#[AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
+#[License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
 #Visibility: Public
-#Dataset owner: LiamLarsen
-#Last updated: 2017-04-27, Version 4
+#Dataset owner: (confidential)
+#Last updated: N/A
+
+#[AdultData](https://archive.ics.uci.edu/ml/datasets/adult)
+#[License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
+#Visibility: Public
+#Dataset owner: Ronny Kohavi and Barry Becker
+#Last updated: 1996-05-01
 
 #------------------------------------------------------------------------------------------------------
 
@@ -327,6 +332,41 @@ def main3():
 # f(1) = 1000
 # f(.5) = 0
 
+def catagorizes(x):
+	if x > .5:
+		return 1
+	return 0
+
+def DataProcessing(ListOfResult):
+	average_activation = []
+	current_sum = 0
+	length_sum = 0
+	for resultList in ListOfResult:
+		current_sum = sum(resultList)
+		length_sum = len(resultList) 
+		average_activation.append(current_sum/length_sum)
+		current_sum = 0
+		length_sum = 0
+	newlist = []
+	for resultList,averager in zip(ListOfResult,average_activation):
+		newlist.append(list(map((lambda x : catagorizes(x/averager)), resultList)))
+	return newlist
+
+def DataInformation(averagedcolumns, ListOfTestValues):
+	average_correctness = []
+	for resultList in averagedcolumns:
+		summer = 0
+		for result_a, result_b in zip(resultList, ListOfTestValues):
+			if result_a != result_b:
+				summer += 0
+			if result_a == result_b:
+				summer += 1
+		#print(summer)
+		summer = summer / len(resultList)
+		average_correctness.append(summer)
+	return average_correctness
+
+
 #airQuality = pd.read_csv("australian.csv")
 #print(airQuality)
 
@@ -347,15 +387,17 @@ AdultIncome = pd.read_table("adult.data", header=None, sep=",", converters={14:i
 # 16 Neurons
 # 4 random weights per Neuron
 
-OneRandomWeights = np.random.rand(1,4)
-OneRandomBiases = np.random.rand(1)
+NumberOfNodes = 2
+
+OneRandomWeights = np.random.rand(NumberOfNodes,4)
+OneRandomBiases = np.random.rand(NumberOfNodes)
 
 #print(OneRandomWeights)
 #print(OneRandomBiases)
 
 AustralianCredit_Part1 = AustralianCredit.head(300)
-AustralianCredit_Part2 = AustralianCredit.tail(10)
-print(AustralianCredit_Part2)
+AustralianCredit_Part2 = AustralianCredit.tail(300)
+#print(AustralianCredit_Part2)
 
 ExpectedOutputAustralian_Array = AustralianCredit_Part1.pop(14)
 #print(AustralianCredit.values)
@@ -376,13 +418,18 @@ def AustralianCredits():
 	listofnewweightsbiases = bulk_training(OneRandomWeights,OneRandomBiases, AustralianCreditValues, sigmoid_neuron, ExpectedOutputAustralian)
 	print("Ending Weights and Answer Estimation")
 	#print(listofnewweightsbiases)
-	print(neuron_layer(listofnewweightsbiases[0],TestCreditAustralian_Input,listofnewweightsbiases[1],sigmoid_neuron))
+	result = neuron_layer(listofnewweightsbiases[0],TestCreditAustralian_Input,listofnewweightsbiases[1],sigmoid_neuron)
+	columnsorted = list(zip(*result))
+	averagedcolumns = DataProcessing(columnsorted)
+	error_calc_values = DataInformation(averagedcolumns, TestCreditAustralian_Output)
+	print(error_calc_values)
 
-#AustralianCredits()
 
-AdultIncome_Part1 = AdultIncome.head(1000)
-AdultIncome_Part2 = AdultIncome.tail(10)
-print(AdultIncome_Part2)
+AustralianCredits()
+
+AdultIncome_Part1 = AdultIncome.head(5000)
+AdultIncome_Part2 = AdultIncome.tail(5000)
+#print(AdultIncome_Part2)
 
 
 ExpectedOutputAdultIncome_Array = AdultIncome_Part1.pop(14)
@@ -400,10 +447,15 @@ def AdultIncomes():
 	listofnewweightsbiases = bulk_training(OneRandomWeights,OneRandomBiases, AdultIncomeValues, sigmoid_neuron, ExpectedOutputAdultIncome)
 	print("Ending Weights and Answer Estimation")
 	#print(listofnewweightsbiases)
-	print(neuron_layer(listofnewweightsbiases[0],TestAdultIncome_Input,listofnewweightsbiases[1],sigmoid_neuron))
+	result = neuron_layer(listofnewweightsbiases[0],TestAdultIncome_Input,listofnewweightsbiases[1],sigmoid_neuron)
+	columnsorted = list(zip(*result))
+	averagedcolumns = DataProcessing(columnsorted)
+	error_calc_values = DataInformation(averagedcolumns, TestAdultIncome_Output)
+	print(error_calc_values)
 
-#AdultIncomes()
-
+AdultIncomes()
 #main()
 
 #main2()
+
+#main3()
