@@ -333,7 +333,7 @@ def main3():
 # f(.5) = 0
 
 def catagorizes(x):
-	if x > .5:
+	if x >= 2: # Double Average
 		return 1
 	return 0
 
@@ -348,8 +348,10 @@ def DataProcessing(ListOfResult):
 		current_sum = 0
 		length_sum = 0
 	newlist = []
+	#print(average_activation)
 	for resultList,averager in zip(ListOfResult,average_activation):
-		newlist.append(list(map((lambda x : catagorizes(x/averager)), resultList)))
+		newlist.append(list(map((lambda x : catagorizes(x/averager)), resultList))) #In this case the theshold is 1, for a number that falls right on the average line
+	#print(newlist)
 	return newlist
 
 def DataInformation(averagedcolumns, ListOfTestValues):
@@ -370,15 +372,28 @@ def DataInformation(averagedcolumns, ListOfTestValues):
 #airQuality = pd.read_csv("australian.csv")
 #print(airQuality)
 
-AustralianCredit = pd.read_table("australian.dat", header=None, sep=" ", usecols=[1,2,6,12,14])
-#print(AustralianCredit.values[0][0] + 1)
+AustralianCredit = pd.read_table("australian.dat", header=None, sep=" ", usecols=[1,2,12,13,14])
+print(AustralianCredit)
 
 def income_converter(x):
 	if  x == " <=50K":
 		return 0
 	return 1
 
-AdultIncome = pd.read_table("adult.data", header=None, sep=",", converters={14:income_converter}, usecols=[0,2,4,12,14])
+def job_converter(x):
+	if x == " Private":
+		return 100
+	if x == " Federal-gov":
+		return 200
+	if x == " Local-gov":
+		return 300
+	if x == " State-gov":
+		return 400
+	if x == " Self-emp-not-inc":
+		return 500
+	return 0
+
+AdultIncome = pd.read_table("adult.data", header=None, sep=",", converters={14:income_converter,1:job_converter}, usecols=[0,1,2,12,14])
 #print(AdultIncome.values[1][0] + 1)
 
 #prepared both as column users
@@ -391,6 +406,10 @@ NumberOfNodes = 2
 
 OneRandomWeights = np.random.rand(NumberOfNodes,4)
 OneRandomBiases = np.random.rand(NumberOfNodes)
+
+OneRandomWeights_b = np.random.rand(1,2)
+OneRandomBiases_b = np.random.rand(1)
+
 
 #print(OneRandomWeights)
 #print(OneRandomBiases)
@@ -424,6 +443,21 @@ def AustralianCredits():
 	error_calc_values = DataInformation(averagedcolumns, TestCreditAustralian_Output)
 	print(error_calc_values)
 
+	layer_1_outputs = neuron_layer(OneRandomWeights,AustralianCreditValues,OneRandomBiases,sigmoid_neuron)
+	listofnewweightsbiases_layer1 = bulk_training(OneRandomWeights,OneRandomBiases, AustralianCreditValues, sigmoid_neuron, layer_1_outputs)
+	layer_2_inputs = neuron_layer(listofnewweightsbiases_layer1[0],AustralianCreditValues,listofnewweightsbiases_layer1[1],sigmoid_neuron)
+	#print(layer_2_inputs) 
+	listofnewweightsbiases_layer2 = bulk_training(OneRandomWeights_b,OneRandomBiases_b, layer_2_inputs, sigmoid_neuron, ExpectedOutputAustralian)
+	layer_1_outputs = neuron_layer(listofnewweightsbiases_layer1[0],TestCreditAustralian_Input,listofnewweightsbiases_layer1[1],sigmoid_neuron)
+	layer_2_outputs = neuron_layer(listofnewweightsbiases_layer2[0],layer_1_outputs,listofnewweightsbiases_layer2[1],sigmoid_neuron)
+	columnsorted2 = list(zip(*layer_2_outputs))
+	averagedcolumns2 = DataProcessing(columnsorted2)
+	error_calc_values2 = DataInformation(averagedcolumns2, TestCreditAustralian_Output)
+	print("\nMainPart2\n")
+	#print(layer_1_outputs)
+	#print(layer_2_outputs)
+	print(error_calc_values2)
+
 
 AustralianCredits()
 
@@ -452,6 +486,21 @@ def AdultIncomes():
 	averagedcolumns = DataProcessing(columnsorted)
 	error_calc_values = DataInformation(averagedcolumns, TestAdultIncome_Output)
 	print(error_calc_values)
+
+	layer_1_outputs = neuron_layer(OneRandomWeights,AdultIncomeValues,OneRandomBiases,sigmoid_neuron)
+	listofnewweightsbiases_layer1 = bulk_training(OneRandomWeights,OneRandomBiases, AdultIncomeValues, sigmoid_neuron, layer_1_outputs)
+	layer_2_inputs = neuron_layer(listofnewweightsbiases_layer1[0],AdultIncomeValues,listofnewweightsbiases_layer1[1],sigmoid_neuron)
+	#print(layer_2_inputs) 
+	listofnewweightsbiases_layer2 = bulk_training(OneRandomWeights_b,OneRandomBiases_b, layer_2_inputs, sigmoid_neuron, ExpectedOutputAdultIncome)
+	layer_1_outputs = neuron_layer(listofnewweightsbiases_layer1[0],TestAdultIncome_Input,listofnewweightsbiases_layer1[1],sigmoid_neuron)
+	layer_2_outputs = neuron_layer(listofnewweightsbiases_layer2[0],layer_1_outputs,listofnewweightsbiases_layer2[1],sigmoid_neuron)
+	columnsorted2 = list(zip(*layer_2_outputs))
+	averagedcolumns2 = DataProcessing(columnsorted2)
+	error_calc_values2 = DataInformation(averagedcolumns2, TestAdultIncome_Output)
+	print("\nMainPart2\n")
+	#print(layer_1_outputs)
+	#print(layer_2_outputs)
+	print(error_calc_values2)
 
 AdultIncomes()
 #main()
