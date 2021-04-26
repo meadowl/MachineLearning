@@ -12,7 +12,8 @@ Neural network architectures
 
 ## Citation
 
-Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In This Homework
+Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In This Homework\
+They were found also on [Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research) without links to the dataset.
 
 [AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
 + [License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
@@ -35,40 +36,60 @@ Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In Th
 
 ## Usage
 
-**Example Usage from Calling "main()" Function**
+**Example Usage from Calling "AustralianCredits()" Function**
 ```Bash
      Starting
-     Loading Edges...
-     Unique Words: 2068
-     Shakespeare Text Generation Menu
-     Option 1: Generate Seeded Text
-     Option 2: Generate From User Input
-     Type 1 or 2 To Select Option, 3 to Exit
-     Input Integer Now:
-     1
-     the devil alone falstaff sweats to be hanged sirs you are ye fat room while i will i will i will
+     Starting Weights and Answer Estimation
+     Ending Weights and Answer Estimation
+     [0.6166666666666667, 0.6166666666666667]
+     
+     MainPart2
 
-
-     Shakespeare Text Generation Menu
-     Option 1: Generate Seeded Text
-     Option 2: Generate From User Input
-     Type 1 or 2 To Select Option, 3 to Exit
-     Input Integer Now:
-     2
-     Please Provide A User String Now:
-     Thou never see
-     thou never see thee lend me thy lantern quoth pick purse that's flat he loves him i will i will i will i
-
-
-     Shakespeare Text Generation Menu
-     Option 1: Generate Seeded Text
-     Option 2: Generate From User Input
-     Type 1 or 2 To Select Option, 3 to Exit
-     Input Integer Now:
-     3
+     [0.6166666666666667]
 ``` 
 
-![Image From Command Prompt](PythonExe.jfif?raw=true "Title")
+**Example Usage from Calling "AustralianCredits()" Function Training/Testing Sets Swapped**
+```Bash
+     Starting
+     Starting Weights and Answer Estimation
+     Ending Weights and Answer Estimation
+     [0.63, 0.63]
+     
+     MainPart2
+     
+     [0.63]
+``` 
+
+![Image From Command Prompt](CreditRun?raw=true "Title")
+![Image From Command Prompt](CreditRun_DataFlipped?raw=true "Title")
+
+**Example Usage from Calling "AdultIncomes()" Function**
+```Bash
+     Starting
+     Starting Weights and Answer Estimation
+     Ending Weights and Answer Estimation
+     [0.7276, 0.7276]
+
+     MainPart2
+
+     [0.7276]
+``` 
+
+
+**Example Usage from Calling "AdultIncomes()" Function Training/Testing Sets Swapped**
+```Bash
+     Starting
+     Starting Weights and Answer Estimation
+     Ending Weights and Answer Estimation
+     [0.7224, 0.7224]
+
+     MainPart2
+
+     [0.7224]
+``` 
+
+![Image From Command Prompt](AdultRun?raw=true "Title")
+![Image From Command Prompt](AdultRun_DataFlipped?raw=true "Title")
 
 ## Figuring Out Space-Time Complexity
 
