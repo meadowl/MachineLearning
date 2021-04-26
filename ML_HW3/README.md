@@ -220,120 +220,59 @@ Obtained by comparing my classification outputs with their actual classification
 Hence why swapping the training and testing sets were important, so that I could verify the accuracy and method of training.\
 And that is how I got the results that I showed in classification.
 
+## Explaining My Neural Network Implementation
+
+At this point, you've seen the results of my Networks and how to use the API of my Networks.\
+So, all that remains is to talk about the implemenation of said API.\
+
+Let me be frank, if you dig around in the API, you'll likely see a lot of confusing testing main() functions that I built.\
+Along with all sorts of recusive Array functions, that were part of my process to actually get this sort of Nerual Network to work.\
+So, let me use this explanation to show the key parts of what I have done and implementated.
+
+**Forward Method**
+
+I start, by abstracting over the idea of what my neuron is actually supposed to compute.\
+Which is to take the weights and the inputs, smash them together - add the bias.\
+Then plug that into whatever activation function that I've chosen.
 
 ```Python
-     AdultIncome_Part1 = AdultIncome.tail(5000)
-     AdultIncome_Part2 = AdultIncome.head(5000)
-
-     ExpectedOutputAdultIncome_Array = AdultIncome_Part1.pop(14)
-     AdultIncomeValues = AdultIncome_Part1.values
-     ExpectedOutputAdultIncome = ExpectedOutputAdultIncome_Array.values
-
-     ExpectedOutputAdultIncome_Array_Part2 = AdultIncome_Part2.pop(14)
-     TestAdultIncome_Input = AdultIncome_Part2.values
-     TestAdultIncome_Output = ExpectedOutputAdultIncome_Array_Part2.values
-``` 
-
-After running the total number of words across Shakespeare's plays was possible.
-```Bash
-     Starting
-     25730
+     def my_neuron(weightList, inputList, bias, my_function):
+     dotproduct = np.dot(weightList,inputList)
+     fullproduct = dotproduct + bias
+     return my_function(fullproduct)
 ```
 
-For refrence after reading through the file, it was found that:\
-11114 lines is 10% of the original documents lines\
-1111 lines is 1% of the original documents lines
+The next step is to have some way of abstracting an entire layer.\
+Which is a chain of looping over inputs, where the called function then loops over the weights/bias for each input.\
+This results in a neuron that takes every input as an argument to be calculated on by every weight/bias.\
+So, this is a full connected neural network, for better or for worse - but it gives me a list of results.
 
-Due to the complexity of the text and runtime, only 1% of Shakespeare's lines were utlized.\
-Anything approaching 10% or greater resulted in runtimes that were not calculable and used RAM in excess of 8 Gigabytes.
-
-Now massaging the data into the rest of the program can be done with reading in newspec.txt\
-Which was accomplished with Linux command line tool Sed to help clean up most unwanted lines.
-
-```Bash
-     sed -i '/ACT/d' spec.txt
-     sed -i '/SCENE/d' spec.txt
-     sed -i '/Enter/d' spec.txt
-     sed -i '/BISHOP/d' spec.txt
-     sed '1112,$d' spec.txt > newspec.txt
+```Python
+     def neuron_layer(EveryNeurons_weightList, Every_inputList, EveryNeurons_bias, Individual_neuron):
+     full_output = []
+     for inputList in Every_inputList:
+          single_output = singleInput_neuron_layer(EveryNeurons_weightList, inputList, EveryNeurons_bias, Individual_neuron)
+          full_output.append(single_output)
+     return full_output
 ```
 
-## Figuring Out Building The Matrix
+**Backwards Derivative Method**
 
-Which allows one to build a reasonable transition matrix for the words probabilites as they relate to one another.
-
-For example:\
-The times "castle" follows "the" is 2 times, so the edge is represened as \["the"\]\["castle"\] = 2\
-Where \["castle"\]\["the"\] is still set to 0, since "castle" never preceeds "the".
-
-Then after filling the matrix with all representitive edges and their associated occurances.\
-The matrix then is itterated over again to calculate the weights.
-
-For example:\
-The times "cow" follows "the" is 1 times, so the edge is represened as \["the"\]\["cow"\] = 1\
-But now, assuming these to be the only edges - need to calculated their weights.\
-So with a total occurance of 3 times for that row, 3 is then divided across the edges resulting in\
-\["the"\]\["castle"\] = 2/3 And \["the"\]\["cow"\] = 1/3
-
-Now a matrix containing all weighted edges for transitions has been produced.\
-And this matrix can now be used to model the probabilities.
-
-Note that in the case of this implementation, the matrix produced holds both the probability and counts per edge.\
-For instance for the strings "the cow" and "the castle":
+At this point I'll admit there are a lot of helper functions, about ten or so, that for various reasons will loop through and call other looping functions.\
+So I'll list them all below, and explain in general what they do, going from the called function of bulk_training().
 
 ```Python
-     externalgraph[("the","castle")] = [2,2/3]
-     externalgraph[("the","cow")] = [1,1/3]
-     externalgraph["the","cow"][0] = 1
-     externalgraph["the","cow"][1] = 1/3
-``` 
+     def simple_error(expectedValue, actualValue):
 
-This provides easy access to both count, as well as the calculated weight of the edge all at once.
+     def layer1_derivative_chain(weightList, expectedValue, actualValue, Adenduminputs, maybeBias):
 
-All of this is handled by:
-```Python
-     def make_externalGraph_commonList(file_name):
-``` 
+     def layer1_bias_chain(weightList, expectedValue, actualValue, Adenduminputs, maybeBias):
 
-Which handles everything important to massaging the text data.\
-From cleaning up the text so that only well-formated words remain without punctuations.\
-To sorting and generating a list that contains every unique word.\
-As well as initializing every possible pair on the matrix with either 0 or some number of times it occured.\
-And doing the initial calcualtion of every pairs probability of occuring.
+     def layer1_weight_adjustment(weightList, bias, expectedValue, actualValue, Adenduminputs):
 
-## How The Transition Matrix Is Used
+     def training_attempt(weightList, bias, inputs, sigmoid_neuron, expectedValue):
 
-After constructing the transition matrix,\
-There is now an N x N initialized matrix for the N unique words in the text-file that was processed.\
-Now it becomes possible to pick the highest weighted edge based on the previous words.
+     def multiple_training_attempts(weightLists, biases, inputLists, sigmoid_neuron, expectedValues):
 
-Because specifically Shakespeare writes Shakespeare,\
-This means that the one observable state always will relate back to the one observable state with 100% certainty.\
-So all calculations rely soley on the calculated hidden-transition matrix.\
-And all that's need are functions that will in the case of Goal 1, pick the next most probable path foward based on weights.\
-And in the case of Goal 2, take into account the user string with rebalanced weights and then pick the most probable path forward again.
-
-Which leads to some defined functions:
-```Python
-     def pick_edge(commonMatrix, commonList, previousWord):
-
-     def iterate_text(commonMatrix, commonList, seedWord):
-
-     def rebalance_matrix_weights(commonMatrix, commonList):
-
-     def modify_matrix(commonMatrix, commonList, userWords):
-
-     def iterate_text_user(commonMatrix, commonList, userWords):
-``` 
-
-For instance assuming the external graph above with "the castle" and "the cow".\
-Here is how these primary functions accomplish the two goals of the project.
-
-Goal 1:\
-The pick_edge would given the previous word "the", pick the higher weighted edge to return "castle".\
-The iterate_text would do this pick_edge for 20 words, given some word to start from.
-
-Goal 2:\
-The rebalance_matrix_weights simply recalculates the stored weighted edges, which is useful because.\
-The modify_matrix always increments the stored occurances of edges from some new user input.\
-The iterate_text_user predicts 20 words, given some user input to add into the stored matrix, and seeds from the last word in the user's string.
+     def bulk_training(weightLists, biases, inputLists, sigmoid_neuron, expectedValues):
+```
