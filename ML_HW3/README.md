@@ -60,8 +60,8 @@ They were found also on [Wikipedia](https://en.wikipedia.org/wiki/List_of_datase
      [0.63]
 ``` 
 
-![Image From Command Prompt](CreditRun?raw=true "Title")
-![Image From Command Prompt](CreditRun_DataFlipped?raw=true "Title")
+![Image From Command Prompt](CreditRun.JPG?raw=true "Title")
+![Image From Command Prompt](CreditRun_DataFlipped.JPG?raw=true "Title")
 
 **Example Usage from Calling "AdultIncomes()" Function**
 ```Bash
@@ -88,8 +88,8 @@ They were found also on [Wikipedia](https://en.wikipedia.org/wiki/List_of_datase
      [0.7224]
 ``` 
 
-![Image From Command Prompt](AdultRun?raw=true "Title")
-![Image From Command Prompt](AdultRun_DataFlipped?raw=true "Title")
+![Image From Command Prompt](AdultRun.JPG?raw=true "Title")
+![Image From Command Prompt](AdultRun_DataFlipped.JPG?raw=true "Title")
 
 ## Figuring Out Space-Time Complexity
 
