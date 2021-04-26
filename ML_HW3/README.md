@@ -36,6 +36,15 @@ They were found also on [Wikipedia](https://en.wikipedia.org/wiki/List_of_datase
 
 ## Usage
 
+Here is the end result, the data printed out is the accuracy rating of the nodes.\
+After the nodes have been trained on some training data, before having the test data used on it.\
+The comparison versus the actual expected classifications.
+
+For AustralianCredit, it is the approval or denial of a credit card based on personal metrics.\
+For AdultIncome, it is the persons ability to make above or below 50k a year in the USA.
+
+For reference, anything above .50, is better than a random two-sided coin flip.
+
 **Example Usage from Calling "AustralianCredits()" Function**
 ```Bash
      Starting
@@ -96,7 +105,7 @@ They were found also on [Wikipedia](https://en.wikipedia.org/wiki/List_of_datase
 **Getting My Training and Testing Data**
 
 First, I read in the data file, selecting the rows of data I wanted to use, including the column that I was classifying against.\
-And in the casae of Adult Income, I had to convert two attributes from text and into numerical values.\
+And in the case of Adult Income, I had to convert two attributes from text and into numerical values.\
 The classification of if someone makes more than 50k, represented with a 1 or a 0.\
 And the determination of Job Type, indicated by some amount of 100's.\
 Of course, for both sets, I played around with what data to use, and found some like Job Types to work better than the others.\
@@ -167,9 +176,9 @@ Then, due to using ReLu at the end of this process (I swapped what my sigmoid fu
 I have to calculate some ratio based on the average output, to determine if it is in the binary classification.\
 Once I do so, I now have a list of "yes, it is over 50k" and "no, it is less than or equal to 50k".\
 Which now I can COMPARE to the ORIGINAL VALUES!\
-And after seeing how accurate my yes and no results were, I print the ratio of my predictions to the screen for each of the nodes.\
+And after seeing how accurate my yes and no results were, I print the ratio of my predictions to the screen for each of the nodes.
 
-**I do the same for the double layered network, with finding derivatives across the chain.**
+**I do the same for the double layered network, with finding derivatives across the chain.**\
 Key difference is that I have to feed the output of the first neurons into the input of the second neuron.\
 And make sure that I carefully recurse with the back calculation of the partial derivatives.\
 Which I then print the result of my accuracy in the same way I did for the previous step.
