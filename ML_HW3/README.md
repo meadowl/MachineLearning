@@ -223,7 +223,7 @@ And that is how I got the results that I showed in classification.
 ## Explaining My Neural Network Implementation
 
 At this point, you've seen the results of my Networks and how to use the API of my Networks.\
-So, all that remains is to talk about the implemenation of said API.\
+So, all that remains is to talk about the implemenation of said API.
 
 Let me be frank, if you dig around in the API, you'll likely see a lot of confusing testing main() functions that I built.\
 Along with all sorts of recusive Array functions, that were part of my process to actually get this sort of Nerual Network to work.\
@@ -240,6 +240,19 @@ Then plug that into whatever activation function that I've chosen.
      dotproduct = np.dot(weightList,inputList)
      fullproduct = dotproduct + bias
      return my_function(fullproduct)
+```
+
+Which I speciallize with the ReLU function, which I implemented over the original Sigmoid function.\
+As the sigmoid, arctan and other methods, converged to the 1.0 value to quickly to make any sense of my results after training.
+
+```Python
+     def my_sigmoid(value):
+     value2 = value * -1
+     sigmoid = 1 / (1 + np.exp(value2))
+     #return sigmoid
+     if value > 0:
+          return value
+     return 0
 ```
 
 The next step is to have some way of abstracting an entire layer.\
@@ -261,8 +274,26 @@ So, this is a full connected neural network, for better or for worse - but it gi
 At this point I'll admit there are a lot of helper functions, about ten or so, that for various reasons will loop through and call other looping functions.\
 So I'll list them all below, and explain in general what they do, going from the called function of bulk_training().
 
+Bulk training itterates over multiple training attempts, I set this itteration to 1, as my data sets were large enough to not need repeated training attempts.\
+Multiple training attempts, will train each neuron's weight and return all of the new trained weights, along with the trained biases.\
+That is from calling Training Attempt, which trains only one neuron at a time, giving individual weight + bias adjustments.\
+Then the layer1_weight_adjustment, will call the helper functions also labled layer1 so it can compute and resolve individual adjustments to each weight and bias.\
+Layer1 bias chain will compute by what value to change the bias value by.\
+Layer1 derivative chain will compute by what value to change each of the weight values by.\
+
+Both of these layer1 processes, involve a lot of recalcuations, essentially baking in the forward method indirectly.\
+By solving for the current evaluation of the dot product between the weights and inputs, and plugging into the derivative of the ReLu.\
+Which because of how things got coded originally, goes by the title of the my_derivative_sigmoid.
+
+And after a lot of following loops and calls, you finally get to where bulk_training provides several updated weights and updated biases.
+
 ```Python
-     def simple_error(expectedValue, actualValue):
+     def my_derivative_sigmoid(value):
+          sigmoid = my_sigmoid(value) * (1 - my_sigmoid(value))
+          #return sigmoid #(1-(np.tanh(value) * np.tanh(value) ))#adj2(sigmoid)
+          if value > 0:
+               return 1
+          return 0
 
      def layer1_derivative_chain(weightList, expectedValue, actualValue, Adenduminputs, maybeBias):
 
@@ -276,3 +307,39 @@ So I'll list them all below, and explain in general what they do, going from the
 
      def bulk_training(weightLists, biases, inputLists, sigmoid_neuron, expectedValues):
 ```
+
+## Showing the Internals with main2()
+
+Below, I'm including a sample run where I experimented and printed out a lot of the internals.\
+Here you can see the staring weights of \[\[\[0.1, 0.1, 0.1\], \[1, 1, 1\], \[-1, -1, -1\]\], \[0.1, 1, -1\]\].\
+And the newly calculated weights that get printed out.\
+Plus a couple of ways that sample inputs were one through, along with showing how high the ReLu values can get between true and false.\
+One thing to note:\
+In this brief showcase, there were starting negative weights which don't exist in my actual data sets or inital weight values for the real data processing.\
+So the error that happens when you give the ReLu a negative value, doesn't immediately snap to zero.\
+But in this case, it does snap to zero on several computations, which shows why I'd need to remodify my algorithims if I ever dealt with negative weights or inputs.\
+For that case I would likely pick the modified ReLu, so that the general behavior isn't altered.
+
+```Bash
+     Starting
+
+     Starting Weights and Answer Estimation
+     [[[0.1, 0.1, 0.1], [1, 1, 1], [-1, -1, -1]], [0.1, 1, -1]]
+     Ending Weights and Answer Estimation
+     [[array([20.1, 20.1, 20.1]), array([21, 21, 21]), array([-1, -1, -1])], [4.1, 5, -1]]
+     [[4.1, 5, 0], [124.7, 131, 0], [486.50000000000006, 509, 0], [607.1, 635, 0]]
+     C:\Users\drago\Desktop\ML_HW3\HW3.py:81: RuntimeWarning: overflow encountered in exp
+       sigmoid = 1 / (1 + np.exp(value2))
+     [[11416.85, 11425.939999999999, 0], [320142.94999999995, 320373.98, 0], [1246321.25, 1247218.1, 0], [1555047.35, 1556166.1400000001, 0]]
+
+     Main2
+
+     [[4.1, 5, 0], [607.1, 635, 0]]
+     [[11416.85, 11425.939999999999, 0], [1555047.35, 1556166.1400000001, 0]]
+
+     Main2_Method2
+
+     [[4.1, 5, 0], [607.1, 635, 0]]
+     [[351.25, 360.34, 0], [44653.75, 45772.54, 0]]
+     [Finished in 0.7s]
+``` 
