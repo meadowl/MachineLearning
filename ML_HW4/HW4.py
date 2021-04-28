@@ -91,13 +91,73 @@ def look_around(myself,mymap):
 	evaluated_up = mymap[up_object[0]][up_object[1]]
 	evaluated_down = mymap[down_object[0]][down_object[1]]
 
-	return([evaluated_left, evaluated_right, evaluated_up, evaluated_down])
+	return([(evaluated_left, 'Left'), (evaluated_right, 'Right'), (evaluated_up, 'Up'), (evaluated_down, 'Down')])
 
 print(move_left(myself))
 print(move_right(myself))
 print(move_up(myself))
 print(move_down(myself))
 print(look_around(myself,MyMap))
+
+def basic_engine():
+	InternalMap = MyMap.applymap(map_converter)
+	InternalLocation = myself
+	PrevousLocation = [-11,-11]
+	for x in range(20):
+		paths = look_around(InternalLocation,InternalMap)
+		paths.sort()
+		#print(paths[-1][1])
+		print(InternalLocation)
+		#print(PrevousLocation)
+		Prevention = False
+		if ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-1][0]):
+			#print("BADHERE\n")
+			if paths[-1][1] == 'Left':
+				if move_left(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_left(InternalLocation)
+				else:
+					Prevention = True
+			if paths[-1][1] == 'Right':
+				if move_right(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_right(InternalLocation)
+				else:
+					Prevention = True
+			if paths[-1][1] == 'Up':
+				if move_up(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_up(InternalLocation)
+				else:
+					Prevention = True
+			if paths[-1][1] == 'Down':
+				if move_down(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_down(InternalLocation)
+				else:
+					Prevention = True
+		if ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-2][0]) and (Prevention == True):
+			#print("HERE\n")
+			if paths[-2][1] == 'Left':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_left(InternalLocation)
+			if paths[-2][1] == 'Right':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_right(InternalLocation)
+			if paths[-2][1] == 'Up':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_up(InternalLocation)
+			if paths[-2][1] == 'Down':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_down(InternalLocation)
+		Prevention = False
+	print(InternalLocation)
+
+basic_engine()
 
 def main_old():
 	gate = 0
