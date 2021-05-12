@@ -3,6 +3,8 @@
 import pandas as pd
 #import matplotlib.pyplot as plt
 import numpy as np
+import queue
+import copy
 from collections import Counter
 
 #plt.close("all")
@@ -32,7 +34,7 @@ print('Starting')
 
 def map_converter(x):
 	if x == "P":
-		return 10
+		return 0
 	if x == "E":
 		return -10
 	if x == "G":
@@ -42,7 +44,7 @@ def map_converter(x):
 
 MyMap = pd.read_table("Map.txt", header=None,sep='\B',engine='python') #sep=",", converters={14:income_converter,1:job_converter}, usecols=[0,1,2,12,14])
 print(MyMap)
-print(MyMap.applymap(map_converter))
+#print(MyMap.applymap(map_converter))
 # Several Characters.
 # S, means self.
 # S, takes it's position and then updates based on choices.
@@ -52,9 +54,28 @@ def getself(mymap):
 	temp2 = np.argwhere(temp == "S")
 	return [temp2[0][1],temp2[0][0]]
 
+def getgoal(mymap):
+	temp = mymap.values
+	temp2 = np.argwhere(temp == "G")
+	return [temp2[0][1],temp2[0][0]]
+
+
+	# for a in range(length):
+	# 	for b in range(length):
+	# 		if valuemap[a][b] == 0:
+	# 			q.put([a,b])
+	# while not q.empty():
+	# 	item = q.get()
+	# 	print(item)
+	# 	print(valuemap[item[0]][item[1]])
+
+
+
 myself = getself(MyMap)
 print("\n")
 print(myself)
+print(getgoal(MyMap))
+print("\n")
 
 def move_left(myself):
 	if (myself[0] == 0):
@@ -93,23 +114,72 @@ def look_around(myself,mymap):
 
 	return([(evaluated_left, 'Left'), (evaluated_right, 'Right'), (evaluated_up, 'Up'), (evaluated_down, 'Down')])
 
-print(move_left(myself))
-print(move_right(myself))
-print(move_up(myself))
-print(move_down(myself))
-print(look_around(myself,MyMap))
+
+def initalizemap(mymap):
+	valuemap = mymap.applymap(map_converter)
+	highvaluelocation = getgoal(mymap)
+	length = len(valuemap[0])
+	q = queue.Queue()
+	v = queue.Queue()
+
+	p = queue.Queue()
+	q.put(highvaluelocation)
+	for i in range(length):
+		#print(q)
+		while not q.empty():
+			item = q.get()
+			grouping = look_around(item, valuemap)
+			if grouping[0][0] == 0:
+				loc = move_left(item)
+				print(loc)
+				v.put(loc)
+				valuemap[loc[0]][loc[1]] = 1
+			if grouping[1][0] == 0:
+				loc = move_right(item)
+				print(loc)
+				v.put(loc)
+				valuemap[loc[0]][loc[1]] = 1
+			if grouping[2][0] == 0:
+				loc = move_up(item)
+				print(loc)
+				v.put(loc)
+				valuemap[loc[0]][loc[1]] = 1
+			if grouping[3][0] == 0:
+				loc = move_down(item)
+				print(loc)
+				v.put(loc)
+				valuemap[loc[0]][loc[1]] = 1
+		#q = v
+		#q = queue.Queue()
+		#q = copy.copy(v)
+		for i in v.queue:
+			p.put(i)
+			q.put(i)
+	print("Break\n")
+	for i in p.queue:
+		print(i)
+	return valuemap
+print(initalizemap(MyMap))
+
+#print(move_left(myself))
+#print(move_right(myself))
+#print(move_up(myself))
+#print(move_down(myself))
+#print(look_around(myself,MyMap))
 
 def basic_engine():
 	InternalMap = MyMap.applymap(map_converter)
 	InternalLocation = myself
 	PrevousLocation = [-11,-11]
-	for x in range(20):
+	f = open("myfile.txt", "w")
+	for x in range(50):
 		paths = look_around(InternalLocation,InternalMap)
 		paths.sort()
-		#print(paths[-1][1])
-		print(InternalLocation)
+		#print(paths[-1])
+		#print(InternalLocation)
 		#print(PrevousLocation)
 		Prevention = False
+		#print(InternalMap[InternalLocation[0]][InternalLocation[1]])
 		if ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-1][0]):
 			#print("BADHERE\n")
 			if paths[-1][1] == 'Left':
@@ -154,10 +224,54 @@ def basic_engine():
 			if paths[-2][1] == 'Down':
 				PrevousLocation = InternalLocation
 				InternalLocation = move_down(InternalLocation)
+		elif ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-3][0]) and (Prevention == True):
+			#print("HERE\n")
+			if paths[-3][1] == 'Left':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_left(InternalLocation)
+			if paths[-3][1] == 'Right':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_right(InternalLocation)
+			if paths[-3][1] == 'Up':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_up(InternalLocation)
+			if paths[-3][1] == 'Down':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_down(InternalLocation)
+		elif ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-4][0]) and (Prevention == True):
+			if paths[-4][1] == 'Left':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_left(InternalLocation)
+			if paths[-4][1] == 'Right':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_right(InternalLocation)
+			if paths[-4][1] == 'Up':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_up(InternalLocation)
+			if paths[-4][1] == 'Down':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_down(InternalLocation)
+		else:
+			if Prevention == False and ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-1][0]) :
+				if paths[-1][1] == 'Left':
+					PrevousLocation = InternalLocation
+					InternalLocation = move_left(InternalLocation)
+				if paths[-1][1] == 'Right':
+					PrevousLocation = InternalLocation
+					InternalLocation = move_right(InternalLocation)
+				if paths[-1][1] == 'Up':
+					PrevousLocation = InternalLocation
+					InternalLocation = move_up(InternalLocation)
+				if paths[-1][1] == 'Down':
+					PrevousLocation = InternalLocation
+					InternalLocation = move_down(InternalLocation)
+
 		Prevention = False
+		f.write('%s\n' % InternalLocation)
+	f.close()
 	print(InternalLocation)
 
-basic_engine()
+#basic_engine()
 
 def main_old():
 	gate = 0
@@ -508,20 +622,20 @@ testinginputs = [[0,0,0],[10,10,10]]
 # 	if  x == " <=50K":
 # 		return 0
 # 	return 1
-
+#
 # def job_converter(x):
 # 	if x == " Private":
-# 		return 100
+#		return 100
 # 	if x == " Federal-gov":
-# 		return 200
-# 	if x == " Local-gov":
-# 		return 300
+#		return 200
+#	if x == " Local-gov":
+#		return 300
 # 	if x == " State-gov":
 # 		return 400
 # 	if x == " Self-emp-not-inc":
-# 		return 500
-# 	return 0
-
+# 			return 500
+#	return 0
+#
 # AdultIncome = pd.read_table("adult.data", header=None, sep=",", converters={14:income_converter,1:job_converter}, usecols=[0,1,2,12,14])
 # #print(AdultIncome.values[1][0] + 1)
 
