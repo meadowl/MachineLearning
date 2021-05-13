@@ -170,7 +170,7 @@ def initalizemap(mymap):
 	#for i in p.queue:
 	#	print(i)
 	return valuemap
-print(initalizemap(MyMap))
+#print(initalizemap(MyMap))
 
 #print(move_left(myself))
 #print(move_right(myself))
@@ -343,8 +343,57 @@ def markov_engine():
 
 #markov_engine()
 
+def temporal_calculation(mymap, current_loc, mylambda, iteration_depth, max_depth):
+	# Say Max Depth = 2
+	# Say iteration depth = 1
+	# Say lambda = 0.5
+	if iteration_depth > max_depth:
+		return 0
+
+	newlambda = (mylambda**iteration_depth)
+	newq = mymap[current_loc[0]][current_loc[1]]
+	iteration_depth += 1
+
+	PrevousLocation = [-11,-11]
+	paths = look_around(current_loc,mymap)
+	paths.sort()
+	if paths[-1][1] == 'Left':
+		PrevousLocation = current_loc
+		current_loc = move_left(current_loc)
+	if paths[-1][1] == 'Right':
+		PrevousLocation = current_loc
+		current_loc = move_right(current_loc)
+	if paths[-1][1] == 'Up':
+		PrevousLocation = current_loc
+		current_loc = move_up(current_loc)
+	if paths[-1][1] == 'Down':
+		PrevousLocation = current_loc
+		current_loc = move_down(current_loc)
+
+	result = temporal_calculation(mymap, current_loc, mylambda, iteration_depth, max_depth)
+	if iteration_depth == 1:
+		return (1 - mylambda) * ((newlambda * newq) + result)
+	return (newlambda * newq) + result
+
+def temporal_training(mymap):
+	for x in range(100):
+		x_cordinate = random.randrange(0,9,1)
+		y_cordinate = random.randrange(0,9,1)
+		InternalLocation = [x_cordinate, y_cordinate]
+		mylambda = 0.5
+		iteration_depth = 0
+		max_depth = 2
+		tempvar = mymap[InternalLocation[0]][InternalLocation[1]]
+		if tempvar != 1000:
+			tempvar = temporal_calculation(mymap, InternalLocation, mylambda, iteration_depth, max_depth)
+		#print(tempvar)
+		mymap[InternalLocation[0]][InternalLocation[1]] = tempvar
+
+	return mymap
+
+
 def randomized_training(mymap):
-	for x in range(100000):
+	for x in range(1000):
 		x_cordinate = random.randrange(0,9,1)
 		y_cordinate = random.randrange(0,9,1)
 		InternalLocation = [x_cordinate, y_cordinate]
@@ -433,7 +482,71 @@ def q_engine():
 		Prevention = False
 	print(InternalLocation)
 
-q_engine()
+#q_engine()
+
+def temporal_engine():
+	InternalMap0 = initalizemap(MyMap)
+	print(InternalMap0)
+	InternalMap = temporal_training(InternalMap0)
+	print(InternalMap)
+	#print(InternalMap0)
+	InternalLocation = myself
+	PrevousLocation = [-11,-11]
+	for x in range(20):
+		paths = look_around(InternalLocation,InternalMap)
+		paths.sort()
+		#print(paths[-1][1])
+		#print(InternalLocation)
+		#print(PrevousLocation)
+		Prevention = False
+		if ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-1][0]):
+			#print("BADHERE\n")
+			if paths[-1][1] == 'Left':
+				if move_left(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_left(InternalLocation)
+				else:
+					Prevention = True
+			if paths[-1][1] == 'Right':
+				if move_right(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_right(InternalLocation)
+				else:
+					Prevention = True
+			if paths[-1][1] == 'Up':
+				if move_up(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_up(InternalLocation)
+				else:
+					Prevention = True
+			if paths[-1][1] == 'Down':
+				if move_down(InternalLocation) != PrevousLocation:
+					Prevention = False
+					PrevousLocation = InternalLocation
+					InternalLocation = move_down(InternalLocation)
+				else:
+					Prevention = True
+		if ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-2][0]) and (Prevention == True):
+			#print("HERE\n")
+			if paths[-2][1] == 'Left':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_left(InternalLocation)
+			if paths[-2][1] == 'Right':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_right(InternalLocation)
+			if paths[-2][1] == 'Up':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_up(InternalLocation)
+			if paths[-2][1] == 'Down':
+				PrevousLocation = InternalLocation
+				InternalLocation = move_down(InternalLocation)
+		Prevention = False
+	print(InternalLocation)
+
+temporal_engine()
 
 def main_old():
 	gate = 0
