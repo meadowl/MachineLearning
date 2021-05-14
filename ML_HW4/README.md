@@ -128,7 +128,7 @@ Barely any changes again in the engine function apart from debugs and swapping t
      def temporal_engine():
 ```
 
-Basically (1 - 1ambda)\[Q1 + lambda_Q2 + lambda^2_Q3+...\] is the general method for Q Learning.\
+Basically (1 - lambda)\[Q1 + lambda_Q2 + lambda^2_Q3+...\] is the general method for Q Learning.\
 So this allows for a recursive definition to be made for training on the idea of looking forward several steps.\
 With some discount that is the value of lambda between 0 and 1, to modify each further iteration.\
 For the case of this program, up to Q3 was generated to verify and test that the implemenation was functional.\
@@ -197,51 +197,20 @@ Each one exterted some interesting way of getting lost in an unwinable state spa
 By wandering around in a perpetual no-reward movement strategy.\
 Since there was no way to learn a way into the goal state, as enemies prevented all routes.
 
-## Usage
+**Discusion of Comparison Between Results**
 
-Here is the end result, the data printed out is the accuracy rating of the nodes.\
-After the nodes have been trained on some training data, before having the test data used on it.\
-The comparison versus the actual expected classifications.
+Something notable, was perhaps due to the limited size of the world only being a possible of a 100 locations.\
+That once any of the algorithims were trained after a reasonable itteration of say 1000 or such,\
+The results were nearly identical and it became hard to distinguish what advantage the individual implementations had.\
+Perhaps for more complex scenarios, larger state spaces, or other conditions these would become more apparent.
 
-For AustralianCredit, it is the approval or denial of a credit card based on personal metrics.\
-For AdultIncome, it is the persons ability to make above or below 50k a year in the USA.
+Interestingly, there was a shared point of falure on training, and that was over-training.\
+This was the first time I encountered this problem. And it led to some interesting things worth discussing.\
+The transition matrix would become trained at maxed out reward values given enough time, and even if you were careful to make sure that\
+each state space couldn't be more than the goal space - you end up with several spots converging to say 999 across the entire map.\
+Which now complicated the agent's movements, as every place it wants to move looks as appealing as the last.\
+And it likely won't find the actual goal state, instead it will be content to keep accepting the 999 values instead of moving to the goal.\
+So you must be careful to inspect the resulting transition matrix during trainings, and ensure that you've set some qualitative value that likely won't give you over training.
 
-For reference, anything above .50, is better than a random two-sided coin flip.
-
-**Example Usage from Calling "AustralianCredits()" Function**
-```Bash
-     Starting
-     Starting Weights and Answer Estimation
-     Ending Weights and Answer Estimation
-     [0.6166666666666667, 0.6166666666666667]
-     
-     MainPart2
-
-     [0.6166666666666667]
-``` 
-
-**Example Usage from Calling "AustralianCredits()" Function Training/Testing Sets Swapped**
-
-```Bash
-     Starting
-
-     Starting Weights and Answer Estimation
-     [[[0.1, 0.1, 0.1], [1, 1, 1], [-1, -1, -1]], [0.1, 1, -1]]
-     Ending Weights and Answer Estimation
-     [[array([20.1, 20.1, 20.1]), array([21, 21, 21]), array([-1, -1, -1])], [4.1, 5, -1]]
-     [[4.1, 5, 0], [124.7, 131, 0], [486.50000000000006, 509, 0], [607.1, 635, 0]]
-     C:\Users\drago\Desktop\ML_HW3\HW3.py:81: RuntimeWarning: overflow encountered in exp
-       sigmoid = 1 / (1 + np.exp(value2))
-     [[11416.85, 11425.939999999999, 0], [320142.94999999995, 320373.98, 0], [1246321.25, 1247218.1, 0], [1555047.35, 1556166.1400000001, 0]]
-
-     Main2
-
-     [[4.1, 5, 0], [607.1, 635, 0]]
-     [[11416.85, 11425.939999999999, 0], [1555047.35, 1556166.1400000001, 0]]
-
-     Main2_Method2
-
-     [[4.1, 5, 0], [607.1, 635, 0]]
-     [[351.25, 360.34, 0], [44653.75, 45772.54, 0]]
-     [Finished in 0.7s]
-``` 
+Avoiding this one pitfall of overtraining, and everything runs smoothly.\
+Except in the case where no path exists to the goal state, and makes training impossible.
