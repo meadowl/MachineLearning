@@ -49,9 +49,9 @@ def getgoal(mymap):
 	return [temp2[0][1],temp2[0][0]]
 
 myself = getself(MyMap)
-print("\n")
-print(myself)
-print(getgoal(MyMap))
+#print("\n")
+#print(myself)
+#print(getgoal(MyMap))
 print("\n")
 
 def move_left(myself):
@@ -408,7 +408,7 @@ def q_engine():
 		paths = look_around(InternalLocation,InternalMap)
 		paths.sort()
 		#print(paths[-1][1])
-		print(InternalLocation)
+		#print(InternalLocation)
 		#print(PrevousLocation)
 		Prevention = False
 		if ((InternalMap[InternalLocation[0]][InternalLocation[1]]) <= paths[-1][0]):
@@ -463,6 +463,7 @@ def q_engine():
 def temporal_engine():
 	InternalMap0 = initalizemap(MyMap)
 	InternalMap = temporal_training(InternalMap0)
+	print(InternalMap)
 	InternalLocation = myself
 	PrevousLocation = [-11,-11]
 	for x in range(20):

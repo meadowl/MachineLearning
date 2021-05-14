@@ -212,5 +212,41 @@ Which now complicated the agent's movements, as every place it wants to move loo
 And it likely won't find the actual goal state, instead it will be content to keep accepting the 999 values instead of moving to the goal.\
 So you must be careful to inspect the resulting transition matrix during trainings, and ensure that you've set some qualitative value that likely won't give you over training.
 
+**Resonable Training Transition Matrix**
+
+```Bash
+     0    1    2    3     4    5    6    7    8    9
+0   51  105   56  128   203   85   37   16   18    9
+1  121  220  254  291   457  214   99  139   18   13
+2   69  166  432  564   630  418  321  257   46   29
+3  342  447  579  699   814  663  463  340  265   76
+4  377  577  709  813   950  791  698  545  362  193
+5  273  462  560  363  1000  363  532  440  230   73
+6  195  314  307  142   -10  216  411  175  108   27
+7  115  145  214   53    35  117  287   39   41   12
+8   65  115   51   38    75   14  116   39  -89    8
+9    8   10   21   48    80   32   14    9    8    0
+```
+
+**Unresonable Training Transition Matrix**
+
+```Bash
+     0    1    2    3     4    5    6    7     8    9
+0   12   23   56  128   203   85   37   16    10    9
+1  999  999  999  999   999  999  999  999   999   13
+2   83  292  630  770   999  606  999  512    47   29
+3  999  657  999  999   999  999  999  427   999   76
+4  999  999  999  999   999  999  999  999   999  193
+5  258  387  999  -10  1000  -10  601  273   999   73
+6  110  999  999  999   -10  119  999  139    68   27
+7  999  999  999  999    20  999  999  999   999   12
+8   11   22   51   19    30   14   33   15 -1000    8
+9    8   10   21   48   999   32   14    9     8    0
+```
+
 Avoiding this one pitfall of overtraining, and everything runs smoothly.\
 Except in the case where no path exists to the goal state, and makes training impossible.
+
+Finally, in any future work, adding the ability to fight monsters would likely create challenges, but it would be interesting to see.\
+I imagine that this can be cost balanced by making the enemy squares traversable in a way that allows for a reward value to be extremely low but still given.\
+But this is the end of this project for now, hope people have a fun time changing the map up to see how it might react with the various engines.
