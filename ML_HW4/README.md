@@ -1,38 +1,37 @@
-# Says One Neuron To Another
+# Treasure Hunters Inc.
 
-Neural network architectures
+  We do the treasure hunting and monster fighting for you
 1. Set up a new git repository in your GitHub account
-2. Pick two datasets from [Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research)
+2. Think up a map-like environment with treasure, obstacles and opponents
 3. Choose a programming language (Python, C/C++, Java)
-4. Formulate ideas on how neural networks can be used to accomplish the task for the specific dataset
-5. Build a neural network to model the prediction process programmatically
+4. Formulate ideas on how reinforcement learning can be used to find treasure efficiently while avoiding obstacles and opponents
+5. Build one or more reinforcement policies to model situational assessments, actions and rewards programmatically
 6. Document your process and results
 7. Commit your source code, documentation and other supporting files to the git repository in GitHub
-
 
 ## Citation
 
 Sources for Relevant Paper And Their Authors, All Data Cited That Was Used In This Homework\
-They were found also on [Wikipedia](https://en.wikipedia.org/wiki/List_of_datasets_for_machine-learning_research) without links to the dataset.
 
-[AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
-+ [License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
-+ Visibility: Public
-+ Dataset owner: (confidential)
-+ Last updated: N/A
-
-[AdultData](https://archive.ics.uci.edu/ml/datasets/adult)
-+ [License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
-+ Visibility: Public
-+ Dataset owner: Ronny Kohavi and Barry Becker
-+ Last updated: 1996-05-01
-
++ Book: Machine Learning 
++ Author: Tom Mitchell
 
 ## Requirements
 
 + Pandas
 + Numpy
-+ Collections
++ Queue
++ Random
+
+
+## Engine Methods
+
+There will be an individual section for each method utilized.\
+The methods are listed below.
+
++ Elemetary MDP Makrov Decision Process
++ Q Learing
++ Temporal Difference
 
 ## Usage
 

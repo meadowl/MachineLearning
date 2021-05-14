@@ -4,9 +4,7 @@ import pandas as pd
 #import matplotlib.pyplot as plt
 import numpy as np
 import queue
-import copy
 import random
-from collections import Counter
 
 #plt.close("all")
 
@@ -14,19 +12,9 @@ from collections import Counter
 #Sources for Relevant Papers And Their Authors
 #All Data Cited That Was Used In This Homework
 
-#They were found also on Wikipedia without links to the dataset.
+# Book: Machine Learning 
+# Author: Tom Mitchell
 
-#[AustralianCredit](https://archive.ics.uci.edu/ml/datasets/statlog+(australian+credit+approval))
-#[License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
-#Visibility: Public
-#Dataset owner: (confidential)
-#Last updated: N/A
-
-#[AdultData](https://archive.ics.uci.edu/ml/datasets/adult)
-#[License: UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/citation_policy.html)
-#Visibility: Public
-#Dataset owner: Ronny Kohavi and Barry Becker
-#Last updated: 1996-05-01
 
 #------------------------------------------------------------------------------------------------------
 
@@ -59,18 +47,6 @@ def getgoal(mymap):
 	temp = mymap.values
 	temp2 = np.argwhere(temp == "G")
 	return [temp2[0][1],temp2[0][0]]
-
-
-	# for a in range(length):
-	# 	for b in range(length):
-	# 		if valuemap[a][b] == 0:
-	# 			q.put([a,b])
-	# while not q.empty():
-	# 	item = q.get()
-	# 	print(item)
-	# 	print(valuemap[item[0]][item[1]])
-
-
 
 myself = getself(MyMap)
 print("\n")
@@ -182,7 +158,7 @@ def basic_engine():
 	InternalMap = MyMap.applymap(map_converter)
 	InternalLocation = myself
 	PrevousLocation = [-11,-11]
-	f = open("myfile.txt", "w")
+	#f = open("myfile.txt", "w")
 	for x in range(50):
 		paths = look_around(InternalLocation,InternalMap)
 		paths.sort()
@@ -278,8 +254,8 @@ def basic_engine():
 					InternalLocation = move_down(InternalLocation)
 
 		Prevention = False
-		f.write('%s\n' % InternalLocation)
-	f.close()
+		#f.write('%s\n' % InternalLocation)
+	#f.close()
 	print(InternalLocation)
 
 #basic_engine()
@@ -486,10 +462,7 @@ def q_engine():
 
 def temporal_engine():
 	InternalMap0 = initalizemap(MyMap)
-	print(InternalMap0)
 	InternalMap = temporal_training(InternalMap0)
-	print(InternalMap)
-	#print(InternalMap0)
 	InternalLocation = myself
 	PrevousLocation = [-11,-11]
 	for x in range(20):
@@ -548,27 +521,27 @@ def temporal_engine():
 
 temporal_engine()
 
-def main_old():
-	gate = 0
-	print("Loading Edges...")
-	#myData = make_externalGraph_commonList('one-hundredth.txt')
-	myData = make_externalGraph_commonList('newspec.txt')
-	externalgraph = myData[0]
-	CommonList = myData[1]
-	while (gate != 3):
-		print("Shakespeare Text Generation Menu")
-		print("Option 1: Generate Seeded Text")
-		print("Option 2: Generate From User Input")
-		print("Type 1 or 2 To Select Option, 3 to Exit")
-		value = input("Input Integer Now:\n")
-		if (value == "1") or (value == "2") or (value == "3"):
-			gate = int(value)
-		if (gate == 1):
-			print(iterate_text(externalgraph, CommonList, "the"))
-		if (gate == 2):
-			userString = input("Please Provide A User String Now:\n")#thou never see
-			print(iterate_text_user(externalgraph, CommonList, userString))
-		print("\n")
+# def main_old():
+# 	gate = 0
+# 	print("Loading Edges...")
+# 	#myData = make_externalGraph_commonList('one-hundredth.txt')
+# 	myData = make_externalGraph_commonList('newspec.txt')
+# 	externalgraph = myData[0]
+# 	CommonList = myData[1]
+# 	while (gate != 3):
+# 		print("Shakespeare Text Generation Menu")
+# 		print("Option 1: Generate Seeded Text")
+# 		print("Option 2: Generate From User Input")
+# 		print("Type 1 or 2 To Select Option, 3 to Exit")
+# 		value = input("Input Integer Now:\n")
+# 		if (value == "1") or (value == "2") or (value == "3"):
+# 			gate = int(value)
+# 		if (gate == 1):
+# 			print(iterate_text(externalgraph, CommonList, "the"))
+# 		if (gate == 2):
+# 			userString = input("Please Provide A User String Now:\n")#thou never see
+# 			print(iterate_text_user(externalgraph, CommonList, userString))
+# 		print("\n")
 #main()
 
 #Ctr+B - runs python in text editing consle.
@@ -576,42 +549,3 @@ def main_old():
 # Standard MKDP Makrov Decision Process
 # Q Learing
 # Temporal Difference
-
-
-# #airQuality = pd.read_csv("australian.csv")
-# #print(airQuality)
-
-# AustralianCredit = pd.read_table("australian.dat", header=None, sep=" ", usecols=[1,2,12,13,14])
-# #print(AustralianCredit)
-
-# NumberOfNodes = 2
-
-# OneRandomWeights = np.random.rand(NumberOfNodes,4)
-# OneRandomBiases = np.random.rand(NumberOfNodes)
-
-# OneRandomWeights_b = np.random.rand(1,2)
-# OneRandomBiases_b = np.random.rand(1)
-
-
-# #print(OneRandomWeights)
-# #print(OneRandomBiases)
-
-# AustralianCredit_Part1 = AustralianCredit.head(300)
-# AustralianCredit_Part2 = AustralianCredit.tail(300)
-# #print(AustralianCredit_Part2)
-
-# ExpectedOutputAustralian_Array = AustralianCredit_Part1.pop(14)
-# #print(AustralianCredit.values)
-
-# AustralianCreditValues = AustralianCredit_Part1.values
-# ExpectedOutputAustralian = ExpectedOutputAustralian_Array.values
-
-
-
-# ExpectedOutputAustralian_Array_Part2 = AustralianCredit_Part2.pop(14)
-# TestCreditAustralian_Input = AustralianCredit_Part2.values
-# TestCreditAustralian_Output = ExpectedOutputAustralian_Array_Part2.values
-
-# #main2()
-
-# #main3()
