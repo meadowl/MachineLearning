@@ -73,7 +73,7 @@ So say the goal reward is 1000, then the spaces nearest to goal would be values 
 Values that are farther and farther away, would become lower like 10 or even 1.\
 Which allowed for a simple actor to move along optimal transitions, or at least attempt to.
 
-There are some mathematical ideas that form the backbone to clearly state them:\
+There are some mathematical ideas that form the backbone to clearly state them:
 + A Set of States
 + A Model of Transition of States
 + An Agents Actions
@@ -88,8 +88,39 @@ So now, it becomes a matter of implementing different ways of formally learning 
 And leaving the learning process to be influenced by the random nature of upcoming implemenations.
 
 ## Q Learing
-## Temporal Difference
 
+With the ability to initialize and have the agent make decisions over the map.\
+All that remains is implementing the randomized Q Learning.\
+This is encapsulated in the randomized_training function, with it being used in a modified engine.
+
+```Python
+     def randomized_training(mymap):
+
+     def q_engine():
+```
+
+So fundamentally the idea with the Q Learning, is that you can drop the agent into a random position in the grid.\
+And then, you can allow it to make a singular optimal action to its next location.\
+This is then recorded via some learning ratio to update the transition's reward value, for future traversals.\
+Ideally you repeat this some large number of times, and at some point sensible rewards will be establised.\
+Such that the agent now modifies the transition matrix, to now have heavier weights on favorable transitions to the ultimate goal state.
+
+Now that the transition matrix is modified significantly.\
+You are able to drop the agent into the enviroment, where it will be able to take multiple steps and eventually reach the goal.\
+In essence since the transition matrix encapsulates the learning, there isn't any modification to how the agent moves.\
+In each state the agent finds itself in, the learned rewards for comparison between all of it's movements it already there.\
+So it must simply take the path of best reward like it already was programed to do.
+
+This is good to know, as in the next learning method, the learning again is represented strictly by how the transition matrix is altered.
+
+## Temporal Difference
+```Python
+     def temporal_calculation(mymap, current_loc, mylambda, iteration_depth, max_depth):
+
+     def temporal_training(mymap):
+
+     def temporal_engine():
+```
 
 ## Usage
 
